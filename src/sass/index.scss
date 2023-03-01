@@ -1,2 +1,12 @@
 @import './common';
-@import './example';
+@import './utils/utils.scss';
+
+@import './header';
+@import './categories';
+@import './calendar';
+@import './news';
+@import './weather';
+@import './footer';
+@import './favorite';
+@import './read';
+@import './read-more';
