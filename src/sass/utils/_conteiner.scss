@@ -1,17 +1,18 @@
 .container {
-  margin: 0 auto;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 16px;
 
   @include mobile {
-    max-width: 480px;
+    max-width: 320px;
   }
 
-  @include tablet {
+  @include tablert {
     max-width: 768px;
   }
 
-  //desktop-style
-
   @include desktop {
-    min-width: 1280px;
+    max-width: 1280px;
   }
 }
