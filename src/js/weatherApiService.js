@@ -27,25 +27,28 @@ async function getDailyWeather(lat, lon) {
   return axios.get(colectedURL);
 }
 
-async function testFu() {}
+async function getDemoWeather() {
+  const colectedURL = `${WEATHER_SOURCE}?lat=${queryOptions.latitude}&lon=${queryOptions.longitude}&exclude=${queryOptions.currentOption}&units=${queryOptions.units}&appid=${queryOptions.key}`;
+  return axios.get(colectedURL).then(r => r.data);
+}
 
-export { getCurrentWeather, getDailyWeather, testFu };
+export { getCurrentWeather, getDailyWeather, getDemoWeather };
 
 // https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
 
-function collectPosition() {
-  navigator.geolocation.getCurrentPosition(r => {
-    const obj = { lat: r.coords.latitude, lon: r.coords.longitude };
-    console.log('this is obj', obj);
-  });
-}
-export { collectPosition, getCurrentPosition };
+// function collectPosition() {
+//   navigator.geolocation.getCurrentPosition(r => {
+//     const obj = { lat: r.coords.latitude, lon: r.coords.longitude };
+//     console.log('this is obj', obj);
+//   });
+// }
+// export { collectPosition, getCurrentPosition };
 
-function getCurrentPosition() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      error => reject(error)
-    );
-  });
-}
+// function getCurrentPosition() {
+//   return new Promise((resolve, reject) => {
+//     navigator.geolocation.getCurrentPosition(
+//       position => resolve(position),
+//       error => reject(error)
+//     );
+//   });
+// }

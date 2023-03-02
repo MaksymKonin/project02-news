@@ -1,48 +1,64 @@
-import { collectPosition } from './weatherApiService';
+import {
+  getCurrentWeather,
+  getDailyWeather,
+  getDemoWeather,
+} from './weatherApiService';
 
-function renderWeatherBlock() {
-  console.log('rendering...');
+function insertWeatherBlock(wetherButtonState, weatherInsertionPoint) {
+  // console.log('rendering...');
+  // console.log('rendering...', wetherButtonState);
+  // console.log('rendering...', weatherInsertionPoint);
+
+  if (wetherButtonState === true) {
+    //single req
+    console.log('single');
+    const resultArray = getDemoWeather();
+    resultArray.then(r => {
+      console.log(r);
+      console.log(r.current);
+      console.log(r.current.weather[0]);
+      console.log('------------------------------');
+      console.log('area name:', r.timezone);
+      console.log('temperature', r.current.temp);
+      console.log('description:', r.current.weather[0].main);
+      console.log('icon:', r.current.weather[0].icon);
+    });
+  } else {
+    //multiple req
+    console.log('multiple');
+  }
 }
-export { renderWeatherBlock };
 
-// import { collectPosition, getCurrentPosition } from './locationApiService.js';
-// function showPosition(position) {
-//   console.log(
-//     'Latitude: ' +
-//       position.coords.latitude +
-//       ' Longitude: ' +
-//       position.coords.longitude
+// async function performQuery(wetherButtonState) {
+//   try {
+//     const geoPosition = await getCurrentPosition();
+//     console.log('async result is', geoPosition);
+//     return geoPosition;
+//   } catch (error) {}
+// }
+
+// async function getCurrentPosition() {
+//   return navigator.geolocation.getCurrentPosition(
+//     successPosition,
+//     alternativeGeo
 //   );
 // }
-// getCurrentWeather();
 
-// collectPosition();
-// getCurrentPosition().then(r => console.log(r));
-function getCurrentPosition() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      error => reject(error)
-    );
-  });
-}
+// // const requestResult = getCurrentPosition();
 
-getCurrentPosition().then(r => console.log(r));
+// // console.log('результат', requestResult);
 
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error(response.status);
-//     }
-//     return response.json();
-//   })
-//   .then(
-//     value => {
-//       console.log('onResolve call inside promise.then()');
-//       console.log(value); // "Success! Value passed to resolve function"
-//     },
-//     // onReject will run third or not at all
-//     error => {
-//       console.log('onReject call inside promise.then()');
-//       console.log(error); // "Error! Error passed to reject function"
-//     }
-//   );
+// function alternativeGeo(error) {
+//   console.log('ошибка здесь', error);
+//   const a = error;
+//   return a;
+// }
+// function successPosition(position) {
+//   console.log('успех', position);
+//   // collectPosition(position.coords.latitude, position.coords.longitude);
+//   const a = position;
+//   return a;
+// }
+// console.log('script continue');
+
+export { insertWeatherBlock };
