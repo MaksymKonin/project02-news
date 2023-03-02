@@ -1,0 +1,58 @@
+.filters-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 16px 48px;
+
+  &-calendar-text {
+    font-weight: 700;
+    font-size: 18px;
+
+    color: var(--text-color);
+
+    margin-right: 37px;
+    display: none;
+
+    @include desktop {
+      display: initial;
+    }
+  }
+  &-calendar-date {
+    position: relative;
+    width: 168px;
+    height: 31px;
+
+    border: 1px solid var(--text-color);
+    border-radius: 20px;
+
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+
+    letter-spacing: 0.02em;
+
+    color: rgba(17, 19, 33, 0.4);
+
+    text-align: center;
+
+    &:before {
+      content: '123';
+      display: block;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+    }
+  }
+}
+
+.filters-section-calendar-date::after {
+  content: '123';
+  display: block;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
