@@ -1,0 +1,44 @@
+
+.btn {
+    
+    padding: 7.5px 24.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.33;
+    text-align: center;
+    color: var(--secondary-text-color);
+    background-color: var(--color-btn-white);
+    border-radius: 20px;
+    border: 1px solid rgba(68, 64, 246, 1);
+    cursor: pointer;
+    transition: 500ms background-color cubic-bezier(0.165, 0.84, 0.44, 1),
+        500ms color cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &:hover,
+    &:focus {
+        background-color: var(--color-active-btn);
+        color: var(--color-btn-white);
+    }
+}
+.categorothers-btns{
+    display: flex;
+    padding: 7.5px 24.5px;
+    cursor: pointer;
+       align-items: center;
+    margin: 0 auto;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.33;
+    text-align: center;
+    color: var(--secondary-text-color);  
+    gap: 12px;
+}
+
+.categories{
+    display: flex;
+    gap: 12px;
+}
