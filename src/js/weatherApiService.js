@@ -1,6 +1,6 @@
 const WEATHER_API_KEY = '19831cf247bc3b5af5cfecb7de987016';
 const WEATHER_SOURCE = 'https://api.openweathermap.org/data/3.0/onecall';
-const WEATHER_REVERSE = 'http://api.openweathermap.org/geo/1.0/reverse';
+const WEATHER_REVERSE = 'https://api.openweathermap.org/geo/1.0/reverse';
 
 import axios from 'axios';
 // import { getPosition } from './locationApiService.js';
