@@ -1,0 +1,19 @@
+footer {
+    height: 120px;
+    width: 100%;
+    background-color: #7A7A7A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 30px;
+    @include tablet {
+        height: 146px;
+    }
+    div {
+        text-align: center;
+    }
+    a {
+        color: blue;
+        text-decoration: underline;
+    }
+}
