@@ -1,0 +1,90 @@
+<!-- Секція календаря + категорії -->
+<div class="filters-section">
+  <div class="filters-section-categories">
+    <!-- Тут будуть фільтри по категоріям -->
+    <button type="button">Business</button>
+  </div>
+  <div class="filters-section-calendar">
+    <span class="filters-section-calendar-text">Search date news</span>
+    <div class="filters-section-calendar-wrapper">
+      <input
+        type="text"
+        id="datetime-picker"
+        class="filters-section-calendar-wrapper-date"
+      />
+    </div>
+  </div>
+</div>
+
+
+<!-- Секція карточок з новинами -->
+<ul class="news-container">
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="weather__card news-item">
+
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+  <li class="news-item">
+    <div class="overlay"></div>
+    <div class="img-thumb"></div>
+    <div class="news-info"></div>
+  </li>
+</ul>
+
+
+<!-- тимчасово додаю розмітку для пагинатора щоб прописати стилі, потім буде додаватися динамично через js  -->
+<div class="pagination container">
+  <ul class="pagination__list">
+      <li class="pagination__item pagination__item--arrow">Prew
+          <svg class="arrow__icon" width="16" height="16" aria-label="Pagination arrow left">
+              <use href="/src/images/іcon-arrow-left.svg"></use>
+          </svg>
+      </li>
+      <li class="pagination__item ">1</li>
+      <li class="pagination__item pagination__item--dots">...</li>
+      <!-- активній  кнопці + клас pagination__item--current-page -->
+      <li class="pagination__item pagination__item--current-page">4</li>
+      <li class="pagination__item ">5</li>
+      <li class="pagination__item ">6</li>
+      <li class="pagination__item pagination__item--dots">...</li>
+      <li class="pagination__item ">20</li>
+      <li class="pagination__item pagination__item--arrow">Next
+          <svg class="arrow__icon" width="16" height="16" aria-label="Pagination arrow right">
+              <use href="/src/images/icon-arrow-right.svg"></use>
+          </svg>
+      </li>
+  </ul>
+</div>
