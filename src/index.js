@@ -12,6 +12,7 @@ const newsApiService = new NewsApiService();
 createCalendar();
 createListCategories();
 //run default weather
+// renderWeatherCardContainer();
 weatherMarkup();
 //run weather according to location
 userPositionConsent();
@@ -113,7 +114,8 @@ function renderNews(normalizedData) {
 }
 //ф-я очистки контейнера новин
 function clearMarkupNews() {
-  refs.containerCardEl.innerHTML = ``;
+  const cards = document.querySelectorAll('.news-card-marker');
+  cards.forEach(card => card.remove());
 }
 // свибір категорій/тестово
 function selectedСategories() {
