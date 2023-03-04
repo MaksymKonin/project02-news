@@ -1,39 +1,31 @@
 import axios from "axios";
 
 
-const baseUrl = "https://api.nytimes.com/svc/search/v2";
-const apiKey = "H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM"
-const searchUrl = `/articlesearch.json?news=${news}&api-key=${apiKey}`
+const API_KEY = 'H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM';
+const CATEGORIES_LIST_URL = 'https://api.nytimes.com/svc/news/v3/content/section-list.json'
 
-export default class categoriesApi {
-  constructor() {
-    this.page = 1;
-    this.searchQuery = '';
-  }
-  
-
-  async fetchCategory() {
-    const searchParams = new URLSearchParams({
-      image_type: 'naws',
-      safesearch: 'true',
-      per_page: 50,
-      page: this.page,
-      q: this.searchQuery,
-      key: API_KEY,
-    });
-
-    const { data } = await axios(`?${searchParams}`);
-    this.incrementPage();
-    return data;
-  }
-
-  incrementPage() {
-    this.page += 1;
-  }
-  resetPage() {
-    this.page = 1;
-  }
+getcategoryNews()
+{
+    return fetch(`${CATEGORIES_NEWS_URL}/${this.selectedСategories}.json?api-key=${API_KEY}`).then(responce => {
+        if (!responce.ok) { throw new Error(responce.statusText); } return responce.json()
+    })
 }
 
-export const categoriesApi = new CategoriesApi();
 
+/* Слухач подій */
+function myFunction() {
+  document.getElementById("listCategory").classList.toggle("show");
+}
+// Закриття закриваючого списку, якщо клікнути за межами списку.
+window.onclick = function(event) {
+  if (!event.target.matches('.btn')) {
+    const dropdowns = document.getElementsByClassName("categories");
+    i;
+    for (i = 0; i < dropdowns.length; i++) {
+      const openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}

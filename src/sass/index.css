@@ -116,7 +116,7 @@ ul {
   color: var(--color-btn-white);
 }
 
-.categorothers-btns {
+.filters-section-categories {
   display: flex;
   padding: 7.5px 24.5px;
   cursor: pointer;
