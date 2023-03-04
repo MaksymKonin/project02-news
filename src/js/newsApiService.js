@@ -15,8 +15,8 @@ export default class newsApiService {
     this.loadCards = 0;
     this.dataNewsDefolt = {
       id_news: Math.floor(Math.random() * 10000),
-      photo_url: '../images/News.jpg',
-      page_url: '../images/News.jpg',
+      photo_url: '/images/News.jpg',
+      page_url: '/News.jpg',
       title: 'title',
       abstract: 'abstract',
       published_date: '1970-01-01',
