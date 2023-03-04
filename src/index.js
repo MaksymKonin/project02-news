@@ -55,15 +55,15 @@ async function searchNews() {
 async function createpopularNews() {
   clearMarkupNews();
   const response = await newsApiService.getpopularNews();
-  try {
-    if (response.results.length === 0) {
-      createCardNoNews();
-    }
+//   try {
+//     if (response.results.length === 0) {
+//       createCardNoNews();
+//     }
     normalizedData = normalaizData(response.results);
     renderNews(normalizedData);
-  } catch (err) {
-    Notify.failure('Sorry, an error occurred, try again later');
-  }
+//   } catch (err) {
+//     Notify.failure('Sorry, an error occurred, try again later');
+//   }
 }
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
