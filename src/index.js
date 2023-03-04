@@ -59,7 +59,7 @@ async function createpopularNews() {
 //     if (response.results.length === 0) {
 //       createCardNoNews();
 //     }
-    normalizedData = normalaizData(response.results);
+    let normalizedData = normalaizData(response.results);
     renderNews(normalizedData);
 //   } catch (err) {
 //     Notify.failure('Sorry, an error occurred, try again later');
