@@ -45,7 +45,7 @@ async function searchNews() {
     if (response.response.docs.length === 0) {
       createCardNoNews();
     }
-    normalizedData = normalaizData(response.response.docs);
+    let normalizedData = normalaizData(response.response.docs);
     renderNews(normalizedData);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
@@ -55,15 +55,15 @@ async function searchNews() {
 async function createpopularNews() {
   clearMarkupNews();
   const response = await newsApiService.getpopularNews();
-//   try {
-//     if (response.results.length === 0) {
-//       createCardNoNews();
-//     }
+  try {
+    if (response.results.length === 0) {
+      createCardNoNews();
+    }
     let normalizedData = normalaizData(response.results);
     renderNews(normalizedData);
-//   } catch (err) {
-//     Notify.failure('Sorry, an error occurred, try again later');
-//   }
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
+  }
 }
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
@@ -73,7 +73,7 @@ async function createNewsCategory() {
     if (response.results.length === 0) {
       createCardNoNews();
     }
-    normalizedData = normalaizData(response.results);
+    let normalizedData = normalaizData(response.results);
     renderNews(normalizedData);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
@@ -82,9 +82,15 @@ async function createNewsCategory() {
 //ф-я запиту по даті новин
 async function dataNews() {
   const response = await calendarApiService();
-  dataCard = normalaizData(response.response.docs);
-  console.log(response.results);
-  createCard(dataCard[0]);
+  try {
+    if (response.results.length === 0) {
+      createCardNoNews();
+    }
+    let normalizedData = normalaizData(response.results);
+    renderNews(normalizedData);
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
+  }
 }
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -96,6 +102,7 @@ async function createListCategories() {
   console.log(arrayCategories);
   return arrayCategories;
 }
+//ф-я рендер всих карток новин
 function renderNews(normalizedData) {
   let cards = normalizedData
     .map(Data => {
@@ -104,6 +111,7 @@ function renderNews(normalizedData) {
     .join('');
   refs.containerCardEl.insertAdjacentHTML('beforeend', cards);
 }
+//ф-я очистки контейнера новин
 function clearMarkupNews() {
   refs.containerCardEl.innerHTML = ``;
 }
