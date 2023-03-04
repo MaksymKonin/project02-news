@@ -123,7 +123,7 @@ function normalaizData(data) {
   data.forEach(element => {
     let photoEl = getPhotoNews(element);
     let publishedDataEl = getPublishedDataNews(element);
-    dataEl = {
+    let dataEl = {
       id_news:
         element?._id || element?.id || newsApiService.dataNewsDefolt.id_news,
       photo_url: photoEl || newsApiService.dataNewsDefolt.photo_url,
