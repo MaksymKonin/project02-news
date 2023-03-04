@@ -17,7 +17,7 @@ function myFunction() {
   document.getElementById("listCategory").classList.toggle("show");
 }
 // Закриття закриваючого списку, якщо клікнути за межами списку.
-window.onclick = function(event) {
+const onclick = function(event) {
   if (!event.target.matches('.btn')) {
     const dropdowns = document.getElementsByClassName("categories");
     i;
