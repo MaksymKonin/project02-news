@@ -15,8 +15,12 @@ import {
 //basic weather setup
 let wetherButtonState = true;
 let weatherInsertionPoint = document.querySelector('.weather__card');
-let weatherButtonInsertionPoint = null;
-let weatherButtonEventListener = null;
+let buttonWeatherForWeek = null;
+let buttonWeatherForToday = null;
+let weeklyWeatherBlock = null;
+let todayWeatherBlock = null;
+let weatherForWeekListener = null;
+let weatherForTodayListener = null;
 // console.log(weatherButtonInsertionPoint);
 let actualLocation = { lat: 39.8865, lon: -83.4483 };
 const currentTimestamp = new Date();
@@ -54,6 +58,15 @@ function secondsToString(seconds) {
   // return `<div>${dayOfWeek}</div><div>${dayOfMonth} ${monthName} ${year}</div>`;
 }
 
+function hideBlock(htmlObj) {
+  console.log('hiding...', htmlObj);
+  htmlObj.classList.add('is-hidden');
+}
+function showBlock(htmlObj) {
+  console.log('showing...', htmlObj);
+  htmlObj.classList.remove('is-hidden');
+}
+
 async function insertWeatherBlock(
   wetherButtonState,
   weatherInsertionPoint,
@@ -70,41 +83,45 @@ async function insertWeatherBlock(
     minTemp: -100,
   };
 
-  if (wetherButtonState === true) {
-    //single req
-    const rawData = getDemoWeather(actualLocation); //request is here
-    const sityNameData = getDetailLocation(actualLocation); //detail location
-    const a = Promise.all([rawData, sityNameData])
-      .then(value => {
-        return value;
-      })
-      .catch(error => console.log(error));
+  const rawDataDay = getDemoWeather(actualLocation); //request is here
+  const rawDataWeek = getDailyWeather(actualLocation); //request is here
+  const sityNameData = getDetailLocation(actualLocation); //detail location
 
-    a.then(result => {
-      const [query1, query2] = result;
-      parsedData.temperature = query1.current.temp;
-      parsedData.description = query1.current.weather[0].main;
-      parsedData.iconCode = query1.current.weather[0].icon;
-      parsedData.sityName = query2[0].name;
-      buildWeatherMarkup(weatherInsertionPoint, parsedData, weatherTimestamp);
-    });
-  } else {
-    //multiple req
+  const a = Promise.all([rawDataDay, rawDataWeek, sityNameData])
+    .then(value => {
+      return value;
+    })
+    .catch(error => console.log('странный лог', error));
 
-    const rawData = getDailyWeather(actualLocation); //request is here
-    const sityNameData = getDetailLocation(actualLocation); //detail location
-    const a = Promise.all([rawData, sityNameData])
-      .then(value => {
-        return value;
-      })
-      .catch(error => console.log(error));
+  a.then(result => {
+    const [query1, query2, query3] = result;
+    parsedData.temperature = query1.current.temp;
+    parsedData.description = query1.current.weather[0].main;
+    parsedData.iconCode = query1.current.weather[0].icon;
+    parsedData.sityName = query3[0].name;
+    weatherInsertionPoint.innerHTML = ''; //clear the default weather block
+    buildWeatherMarkup(weatherInsertionPoint, parsedData, weatherTimestamp);
+    buildForecastMarkup(weatherInsertionPoint, query2, query3);
+    weeklyWeatherBlock = document.querySelector('#weekly_weather_block');
+    todayWeatherBlock = document.querySelector('#today_weather_block');
+    buttonWeatherForWeek = document.querySelector('#weather_for_week');
+    buttonWeatherForToday = document.querySelector('#weather_for_today');
 
-    a.then(result => {
-      const [query1, query2] = result;
-
-      buildForecastMarkup(weatherInsertionPoint, query1, query2);
-    });
-  }
+    weatherForWeekListener = buttonWeatherForWeek.addEventListener(
+      'click',
+      obj => {
+        showBlock(weeklyWeatherBlock);
+      }
+    );
+    weatherForTodayListener = buttonWeatherForToday.addEventListener(
+      'click',
+      obj => {
+        hideBlock(weeklyWeatherBlock);
+      }
+    );
+  }).catch(error =>
+    buildWeatherMarkup(weatherInsertionPoint, parsedData, weatherTimestamp)
+  );
 }
 
 export { insertWeatherBlock };
@@ -119,7 +136,6 @@ async function userPositionConsent() {
     actualLocation.lon = r.coords.longitude;
     weatherTimestamp = r.timestamp;
 
-    weatherInsertionPoint.innerHTML = ''; //clear the default weather block
     // weatherButtonInsertionPoint = document.querySelector('.weather-button');
     // weatherButtonEventListener
 
