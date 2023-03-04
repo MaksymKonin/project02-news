@@ -9,7 +9,7 @@ export default function markupCard(card) {
     published_date,
   } = card;
   return `
-        <li data-id-news ="${id_news}" class="js-card">
+        <li data-id-news ="${id_news}" class="js-card news-item news-card-marker">
       <img src="${photo_url}" alt="photo news" />
       <span class="status-reed">Have read</span>
       <span class="status-favorite">${statusFavorite}</span>
