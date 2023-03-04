@@ -13,10 +13,10 @@ export default class newsApiService {
     this.selectedСategories = '';
     this.page = 1;
     this.loadCards = 0;
-    this.dataNewsDefolt = {
+    this.dataNewsDefault = {
       id_news: Math.floor(Math.random() * 10000),
-      photo_url: '/images/News.jpg',
-      page_url: '/News.jpg',
+      photo_url: '../images/News.jpg',
+      page_url: '../images/News.jpg',
       title: 'title',
       abstract: 'abstract',
       published_date: '1970-01-01',

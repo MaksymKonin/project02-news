@@ -44,7 +44,7 @@ async function searchNews() {
   const response = await newsApiService.getsearchNews();
   try {
     if (response.response.docs.length === 0) {
-      createCardNoNews();
+      createCardNotFound();
     }
     let normalizedData = normalaizData(response.response.docs);
     renderNews(normalizedData);
@@ -58,7 +58,7 @@ async function createpopularNews() {
   const response = await newsApiService.getpopularNews();
   try {
     if (response.results.length === 0) {
-      createCardNoNews();
+      createCardNotFound();
     }
     let normalizedData = normalaizData(response.results);
     renderNews(normalizedData);
@@ -72,7 +72,7 @@ async function createNewsCategory() {
   const response = await newsApiService.getcategoryNews();
   try {
     if (response.results.length === 0) {
-      createCardNoNews();
+      createCardNotFound();
     }
     let normalizedData = normalaizData(response.results);
     renderNews(normalizedData);
@@ -84,10 +84,10 @@ async function createNewsCategory() {
 async function dataNews() {
   const response = await calendarApiService();
   try {
-    if (response.results.length === 0) {
-      createCardNoNews();
+    if (response.response.docs.length === 0) {
+      createCardNotFound();
     }
-    let normalizedData = normalaizData(response.results);
+    let normalizedData = normalaizData(response.response.docs);
     renderNews(normalizedData);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
@@ -119,12 +119,12 @@ function clearMarkupNews() {
 }
 // свибір категорій/тестово
 function selectedСategories() {
-  newsApiService.selectedСategories = 'automobiles';
+  newsApiService.selectedСategories = 'automobiles, arts';
 }
 // створення карточки без новин
-function createCardNoNews() {
-  card = `<h1>We haven’t found news from this category</h1>
-  <img src="./images/News.jpg" alt="photo news" />`;
+function createCardNotFound() {
+  card = `<div class="not-found-container"><h1 class="not-found-title">We haven’t found news from this category</h1>
+  <img class="not-found-img" src="./images/News.jpg" alt="photo news" /></div>`;
   refs.containerCardEl.insertAdjacentHTML('beforeend', card);
 }
 // приводимо дані від сервера до одного виду
@@ -135,18 +135,18 @@ function normalaizData(data) {
     let publishedDataEl = getPublishedDataNews(element);
     let dataEl = {
       id_news:
-        element?._id || element?.id || newsApiService.dataNewsDefolt.id_news,
-      photo_url: photoEl || newsApiService.dataNewsDefolt.photo_url,
+        element?._id || element?.id || newsApiService.dataNewsDefault.id_news,
+      photo_url: photoEl || newsApiService.dataNewsDefault.photo_url,
       page_url:
         element?.web_url ||
         element?.url ||
-        newsApiService.dataNewsDefolt.page_url,
-      statusFavorite: newsApiService.dataNewsDefolt.statusFavorite,
+        newsApiService.dataNewsDefault.page_url,
+      statusFavorite: newsApiService.dataNewsDefault.statusFavorite,
       title:
         element?.headline?.main ||
         element?.title ||
-        newsApiService.dataNewsDefolt.title,
-      abstract: element?.abstract || newsApiService.dataNewsDefolt.abstract,
+        newsApiService.dataNewsDefault.title,
+      abstract: element?.abstract || newsApiService.dataNewsDefault.abstract,
       published_date: publishedDataEl,
     };
     araayData.push(dataEl);
@@ -157,12 +157,12 @@ function normalaizData(data) {
 function getPhotoNews(element) {
   let photoEl = element?.multimedia || element?.media;
   if (photoEl?.length === 0) {
-    return newsApiService.dataNewsDefolt.photo_url;
+    return newsApiService.dataNewsDefault.photo_url;
   }
   if ((photoEl = element?.media)) {
     photoEl =
       element.media[0]['media-metadata'].length === 0
-        ? newsApiService.dataNewsDefolt.photo_url
+        ? newsApiService.dataNewsDefault.photo_url
         : element.media[0]['media-metadata'][2].url;
   } else {
     photoEl = element?.multimedia[0].url.includes('https://static01.nyt.com/')
@@ -176,7 +176,7 @@ function getPublishedDataNews(element) {
   let date = new Date(
     element?.pub_date ||
       element?.published_date ||
-      newsApiService.dataNewsDefolt.published_date
+      newsApiService.dataNewsDefault.published_date
   );
   return (
     addZero(date.getDate()) +
@@ -194,5 +194,3 @@ function addZero(num) {
     return num;
   }
 }
-
-
