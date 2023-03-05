@@ -9,15 +9,18 @@ export default function markupCard(card) {
     published_date,
   } = card;
   return `
-        <li data-id-news ="${id_news}" class="js-card news-item news-card-marker">
-      <img src="${photo_url}" alt="photo news" />
-      <span class="status-reed">Have read</span>
-      <span class="status-favorite">${statusFavorite}</span>
-      <a href="${page_url}"><h2>${title}</h2></a>
-      <p>${abstract}</p>
+    <li data-id-news ="${id_news}" class="js-card">
+      <div class="button-type">
+        <span class="status-reed">Have read</span>
+        <span class="job-text">Job searching</span>
+        <button class="status-favorite" type="button">${statusFavorite}</button>
       <div>
-        <span class="published_date">${published_date}</span>
-        <a href="${page_url}">Read more</a>
+      <img class="card-img" src="${photo_url}" alt="photo news" />
+      <a href="${page_url}"><h2 class="page-url">${title}</h2></a>
+      <p class="abstract-text">${abstract}</p>
+      <div>
+        <span class="published-date">${published_date}</span>
+        <a class="read-more" href="${page_url}">Read more</a>
       </div>
     </li>
     `;
