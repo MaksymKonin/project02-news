@@ -1,4 +1,4 @@
-const WEATHER_API_KEY = '19831cf247bc3b5af5cfecb7de987016';
+const WEATHER_API_KEY = '25520672b86a16972f62ac80defff3d9';
 const WEATHER_SOURCE = 'https://api.openweathermap.org/data/3.0/onecall';
 const WEATHER_REVERSE = 'https://api.openweathermap.org/geo/1.0/reverse';
 
