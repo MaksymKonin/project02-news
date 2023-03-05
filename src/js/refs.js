@@ -3,4 +3,6 @@ export const refs = {
   containerCategoriesEl: document.querySelector('.js-categories'),
   containerCardEl: document.querySelector('.js-container-card'),
   containerPaginationEl: document.querySelector('.js-pagination'),
+  checkBoxEl: document.querySelector('.theme-switch__toggle'),
+  bodyEl: document.querySelector('body'),
 };

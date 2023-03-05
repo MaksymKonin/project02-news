@@ -1,4 +1,8 @@
 import ls from '../localStorage';
+import setNewActiveLink from '../currentLink';
+import changeTheme from '../changeTheme';
+setNewActiveLink();
+changeTheme();
 
 const newsTest = [
   {

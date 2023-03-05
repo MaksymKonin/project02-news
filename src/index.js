@@ -1,4 +1,5 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import changeTheme from './js/changeTheme';
 import { userPositionConsent, weatherMarkup } from './js/weatherServiceMain';
 import createCalendar from './js/renderCalendar';
 import NewsApiService from './js/newsApiService';
@@ -14,6 +15,7 @@ import localStorage from './js/localStorage';
 
 const newsApiService = new NewsApiService();
 
+changeTheme();
 createCalendar();
 createListCategories();
 //run default weather
@@ -26,7 +28,7 @@ createpopularNews();
 refs.formEl.addEventListener('submit', onFormSubmit);
 refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
 
-//ф-я обробка кліку по кнопці
+//ф-я обробка кліку по кнопці форми
 function onFormSubmit(evt) {
   evt.preventDefault();
   newsApiService.resetData();
@@ -60,15 +62,15 @@ async function searchNews() {
 async function createpopularNews() {
   clearMarkupNews();
   const response = await newsApiService.getpopularNews();
-  // try {
-  //   if (response.results.length === 0) {
-  //     createCardNotFound();
-  //   }
-  let normalizedData = normalaizData(response.results);
-  renderNews(normalizedData);
-  // } catch (err) {
-  //   Notify.failure('Sorry, an error occurred, try again later');
-  // }
+  try {
+    if (response.results.length === 0) {
+      createCardNotFound();
+    }
+    let normalizedData = normalaizData(response.results);
+    renderNews(normalizedData);
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
+  }
 }
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
@@ -104,10 +106,9 @@ async function createListCategories() {
   response.results.forEach(element => {
     arrayCategories.push(element.section);
   });
-  console.log(arrayCategories);
+  // console.log(arrayCategories);
   return arrayCategories;
 }
-
 // свибір категорій/тестово
 function selectedСategories() {
   newsApiService.selectedСategories = 'automobiles, arts';
