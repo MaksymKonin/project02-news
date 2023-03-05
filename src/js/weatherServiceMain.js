@@ -59,11 +59,9 @@ function secondsToString(seconds) {
 }
 
 function hideBlock(htmlObj) {
-  console.log('hiding...', htmlObj);
   htmlObj.classList.add('is-hidden');
 }
 function showBlock(htmlObj) {
-  console.log('showing...', htmlObj);
   htmlObj.classList.remove('is-hidden');
 }
 
