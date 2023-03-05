@@ -3,6 +3,7 @@ export default function markupCard(card) {
     id_news,
     photo_url,
     page_url,
+    section,
     statusFavorite,
     title,
     abstract,
@@ -12,7 +13,7 @@ export default function markupCard(card) {
     <li data-id-news ="${id_news}" class="js-card">
       <div class="button-type">
         <span class="status-reed">Have read</span>
-        <span class="job-text">Job searching</span>
+        <span class="job-text">"${section}"</span>
         <button class="status-favorite" type="button">${statusFavorite}</button>
       <div>
       <img class="card-img" src="${photo_url}" alt="photo news" />
