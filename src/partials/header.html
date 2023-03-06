@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="container--header">
+    <div class="container container--header">
         <div class="header-nav-wrapper">
     
             <nav class="header-navigation">
@@ -25,7 +25,7 @@
         </div>
 
         <!-- Mobile menu -->
-    <button class="mobile-menu__btn js-open-menu" aria-expanded="false">
+    <!-- <button class="mobile-menu__btn js-open-menu" aria-expanded="false"> -->
         <!-- <svg class="burger-icon"
         width="24"
         height="24"
@@ -33,31 +33,50 @@
             >
             <use href=""></use>
             </svg> -->
-        </button>
+        <!-- </button> -->
         
         <!-- Search form -->
+    <div class="search-form_wrapper">
         <form class="header-search-form js-form-search">
-            <div class="search-form_wrapper">
-                <input class="search__form--input" type="text" name="searchQuery" placeholder="Search" />
+                <input class="search__form--input" 
+                type="text" 
+                name="searchQuery" 
+                autocomplete="off"
+                placeholder="Search" 
+                />
                 <button type="submit" class="search-btn">
-                    <span class="search-icon"></span>
+                    <!-- <span class="search-icon"></span> -->
+                    <svg class="search-icon-btn" width="20" height="20">
+                        <use href="/src/images/icons.svg#icon-bx_search"></use>
+                    </svg>
                 </button>
-            </div>
         </form>
-        </div>
+    </div>
+
+</div>
 
     <!-- Theme switch -->
     <div class="toolbar">
         <div class="theme">
-            <span class="light-theme">Light</span>
+            <p class="light-theme">Light</p>
+            <p class="light-theme-mobile">
+                <svg width="21" height="21">
+                    <use href="/src/images/icons.svg#icon-sun"></use>
+                </svg>
+            </p>
                 <div class="theme-switch__wrap">
-                    <input class="theme-switch__toggle main-theme-switch__toggle" type="checkbox" name="theme" 
-                        id="theme-switch-toggle" aria-label="switch theme" />
                     <label aria-hidden="true" class="theme__track" for="theme-switch-toggle">
+                        <input class="theme-switch__toggle main-theme-switch__toggle" type="checkbox" name="theme" 
+                        id="theme-switch-toggle" aria-label="switch theme" />
+                            <div aria-hidden="true" class="theme__marker"></div>
                     </label>
-                <div aria-hidden="true" class="theme__marker"></div>
             </div>
-            <span class="darh-theme">Dark</span>
+            <p class="darh-theme">Dark</p>
+            <p class="light-theme-mobile">
+                <svg width="21" height="21">
+                    <use href="/src/images/icons.svg#icon-moon"></use>
+                </svg>
+            </p>
         </div>
     
     </div>
