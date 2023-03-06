@@ -48,15 +48,15 @@ function onCategoriesClick(evt) {
 async function searchNews() {
   clearMarkupNews();
   const response = await newsApiService.getsearchNews();
-  try {
+  // try {
     if (response.response.docs.length === 0) {
       createCardNotFound();
-    }
+    // }
     let normalizedData = normalaizData(response.response.docs);
     renderNews(normalizedData);
-  } catch (err) {
-    Notify.failure('Sorry, an error occurred, try again later');
-  }
+  // } catch (err) {
+  //   Notify.failure('Sorry, an error occurred, try again later');
+  // }
 }
 //ф-я створення популярних новин
 async function createpopularNews() {
