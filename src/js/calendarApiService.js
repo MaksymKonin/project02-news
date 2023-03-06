@@ -7,7 +7,7 @@ const TEST_SELECTED_CATEGORY = 'test-selected-category';
 
 // Видалити після отримання реального ключа START
 const testArray = [];
-testArray.push('Business', 'Sports');
+testArray.push('Sports');
 
 // Значення запишеться іншою людиною
 localStorage.setItem(TEST_SELECTED_CATEGORY, JSON.stringify(testArray));
