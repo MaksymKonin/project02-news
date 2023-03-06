@@ -19,7 +19,7 @@ function renderCategoriesDesktop(arr, anchor) {
     // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
-  finalString = `<form class="categories-form categories-desktop">${buttonString}<select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Others</option>${listString}</select></form>`;
+  finalString = `<div class="categories-form categories-desktop">${buttonString}<select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Others</option>${listString}</select></div>`;
   // console.log(finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
@@ -39,7 +39,7 @@ function renderCategoriesTablet(arr, anchor) {
     // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
-  finalString = `<form class="categories-form categories-tablet">${buttonString}<select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Others</option>${listString}</select></form>`;
+  finalString = `<div class="categories-form categories-tablet">${buttonString}<select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Others</option>${listString}</select></div>`;
   // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
@@ -52,7 +52,7 @@ function renderCategoriesMobile(arr, anchor) {
     // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
-  finalString = `<form class="categories-form categories-mobile"><select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Categories</option>${listString}</select></form>`;
+  finalString = `<div class="categories-form categories-mobile"><select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Categories</option>${listString}</select></div>`;
   // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
