@@ -12,8 +12,8 @@ import {
 } from './js/renderNews';
 import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
-import localStorage from './js/localStorage';
-
+import LocalStorageService from './js/localStorage';
+const localStorageService = new LocalStorageService();
 const newsApiService = new NewsApiService();
 
 changeTheme();
@@ -32,10 +32,21 @@ categoriesAction.then(r => {
 weatherMarkup();
 //run weather according to location
 userPositionConsent();
-createpopularNews();
+
+let arraySelectedCategories = [];
+
+console.log(loadingSavedFilters());
+if (loadingSavedFilters()) {
+  arraySelectedCategories =
+    newsApiService.selectedCategories !== ''
+      ? newsApiService.selectedCategories
+      : [];
+  createNewsCategory();
+} else createpopularNews();
 
 refs.formEl.addEventListener('submit', onFormSubmit);
 refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
+refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
 
 //ф-я обробка кліку по кнопці форми
 function onFormSubmit(evt) {
@@ -51,6 +62,7 @@ function onCategoriesClick(evt) {
   evt.preventDefault();
   newsApiService.resetData();
   clearMarkupNews();
+  selectedCategories(evt);
   createNewsCategory();
 }
 //ф-я запиту новин по назві
@@ -83,17 +95,17 @@ async function createpopularNews() {
 }
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
-  selectedСategories();
   const response = await newsApiService.getcategoryNews();
-  try {
-    if (response.results.length === 0) {
-      createCardNotFound();
-    }
-    let normalizedData = normalaizData(response.results);
-    renderNews(normalizedData);
-  } catch (err) {
-    Notify.failure('Sorry, an error occurred, try again later');
+  console.log(response);
+  // try {
+  if (response.response.docs.length === 0) {
+    createCardNotFound();
   }
+  let normalizedData = normalaizData(response.response.docs);
+  renderNews(normalizedData);
+  // } catch (err) {
+  //   Notify.failure('Sorry, an error occurred, try again later');
+  // }
 }
 //ф-я запиту по даті новин
 async function dataNews() {
@@ -119,6 +131,45 @@ async function createListCategories() {
   return arrayCategories;
 }
 // свибір категорій/тестово
-function selectedСategories() {
-  newsApiService.selectedСategories = 'automobiles, arts';
+function selectedCategories(evt) {
+  if (evt.type === 'click' && evt.target.nodeName === 'BUTTON') {
+    addSelectedCategories(evt.target.textContent);
+  } else if (evt.type === 'change' && evt.target.nodeName === 'SELECT') {
+    addSelectedCategories(evt.target.value);
+  }
+  console.log(newsApiService.selectedCategories);
+}
+
+function addSelectedCategories(category) {
+  console.log(arraySelectedCategories);
+
+  if (!arraySelectedCategories.includes(category))
+    arraySelectedCategories.push(category);
+  else {
+    arraySelectedCategories.splice(
+      arraySelectedCategories.indexOf(category),
+      1
+    );
+  }
+
+  let filters = newsApiService.selectedDate
+    ? {
+        selectedCategories: arraySelectedCategories,
+        selectedDate: newsApiService.selectedDate,
+      }
+    : { selectedCategories: arraySelectedCategories };
+  localStorageService.save(localStorageService.keySavedFilters, filters);
+}
+
+function loadingSavedFilters() {
+  let filters = localStorageService.loadFilters();
+  if (filters) {
+    newsApiService.selectedCategories = filters?.selectedCategories
+      ? filters?.selectedCategories
+      : '';
+    newsApiService.selectedDate = filters?.selectedDate
+      ? filters?.selectedDate
+      : '';
+  }
+  return filters;
 }

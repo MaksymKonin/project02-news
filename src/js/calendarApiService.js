@@ -1,5 +1,6 @@
 import axios from 'axios';
-
+import LocalStorageService from './localStorage';
+const localStorageService = new LocalStorageService();
 const SELECTED_DATE = 'selected-date';
 // Перейменувати ключ і змінну
 const TEST_SELECTED_CATEGORY = 'test-selected-category';
@@ -14,6 +15,7 @@ localStorage.setItem(TEST_SELECTED_CATEGORY, JSON.stringify(testArray));
 
 export default function calendarApiService(date) {
   let toTimestamp = date.getTime();
+  console.log(toTimestamp);
   localStorage.setItem(SELECTED_DATE, toTimestamp);
 
   // Прийом категорій з локал сторідж
@@ -23,9 +25,14 @@ export default function calendarApiService(date) {
 
   // Перевірка наявності вибраних категорій
   if (paramsFromLocalStorage) {
-    selectedCategories = JSON.parse(paramsFromLocalStorage).join(', ');
+    selectedCategories = JSON.parse(paramsFromLocalStorage);
     params = `&fq=news_desk:(${selectedCategories})`;
   }
+  let filter = selectedCategories
+    ? { selectedСategories: selectedCategories, selectedDate: toTimestamp }
+    : { selectedDate: toTimestamp };
+
+  localStorageService.save(localStorageService.keySavedFilters, filter);
 
   const baseUrl = 'https://api.nytimes.com/svc/search/v2';
   const apiKey = 'H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM';
