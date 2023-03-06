@@ -10,6 +10,7 @@ import {
   createCardNotFound,
   clearMarkupNews,
 } from './js/renderNews';
+import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
 import localStorage from './js/localStorage';
 
@@ -17,7 +18,15 @@ const newsApiService = new NewsApiService();
 
 changeTheme();
 createCalendar();
-createListCategories();
+//---render categories---
+
+const categoriesAction = createListCategories();
+categoriesAction.then(r => {
+  createCategories(r, refs.containerCategoriesEl);
+});
+
+//---END OF render categories---
+
 //run default weather
 // renderWeatherCardContainer();
 weatherMarkup();
@@ -106,7 +115,7 @@ async function createListCategories() {
   response.results.forEach(element => {
     arrayCategories.push(element.section);
   });
-  // console.log(arrayCategories);
+  // console.log('categories-->', arrayCategories);
   return arrayCategories;
 }
 // свибір категорій/тестово

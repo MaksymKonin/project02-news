@@ -1,0 +1,95 @@
+.filters-section-categories {
+  position: relative;
+  margin-right: 25px;
+}
+
+.categories-form {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+}
+
+.btn-categories,
+.btn-categories-others {
+  padding: 7.5px 24.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.33;
+  text-align: center;
+  color: var(--secondary-text-color);
+  background-color: var(--color-btn-white);
+  border-radius: 20px;
+  border: 1px solid rgba(68, 64, 246, 1);
+  cursor: pointer;
+  transition: 500ms background-color cubic-bezier(0.165, 0.84, 0.44, 1),
+    500ms color cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-active-btn);
+    color: var(--color-btn-white);
+  }
+}
+.filters-section-categories {
+  width: 100%;
+  display: flex;
+  padding: 0px 24.5px;
+  cursor: pointer;
+  align-items: center;
+  margin: 0 auto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.33;
+  text-align: center;
+  color: var(--color-active-btn);
+  background-color: var(--color-btn-white);
+  gap: 12px;
+}
+
+// тут ховаємо форми з категоріями згідно з точками перелому
+
+.categories-desktop {
+  @include mobile {
+    display: none;
+  }
+
+  @include tablet {
+    display: none;
+  }
+
+  @include desktop {
+    display: flex;
+  }
+}
+
+.categories-tablet {
+  @include mobile {
+    display: none;
+  }
+
+  @include tablet {
+    display: flex;
+  }
+
+  @include desktop {
+    display: none;
+  }
+}
+.categories-mobile {
+  @include mobile {
+    display: flex;
+  }
+
+  @include tablet {
+    display: none;
+  }
+
+  @include desktop {
+    display: none;
+  }
+}
