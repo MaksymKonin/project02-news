@@ -21,10 +21,11 @@
   display: flex;
   flex-wrap: wrap;
   width: 288px;
-  height: 469px;
+  height: 630px;
 
   @include tablet {
-    width: 343px;
+    width: 353px;
+    height: 675px;
   }
 
   @include desktop {
