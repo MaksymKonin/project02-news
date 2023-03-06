@@ -1,6 +1,7 @@
-import ls from '../localStorage';
+import LocalStorageService from '../localStorage';
 import setNewActiveLink from '../currentLink';
 import changeTheme from '../changeTheme';
+const localStorageService = new LocalStorageService();
 setNewActiveLink();
 changeTheme();
 
@@ -71,8 +72,8 @@ const newsTest = [
 ];
 
 const lsNewsKey = 'readNews';
-ls.save(lsNewsKey, newsTest);
-const readNews = ls.load(lsNewsKey);
+localStorageService.save(lsNewsKey, newsTest);
+const readNews = localStorageService.load(lsNewsKey);
 const groupedNewsByReadDate = groupByReadDate(readNews);
 renderExpansionPanel(groupedNewsByReadDate);
 
