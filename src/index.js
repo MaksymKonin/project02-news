@@ -49,11 +49,11 @@ async function searchNews() {
   clearMarkupNews();
   const response = await newsApiService.getsearchNews();
   // try {
-    if (response.response.docs.length === 0) {
-      createCardNotFound();
-    // }
-    let normalizedData = normalaizData(response.response.docs);
-    renderNews(normalizedData);
+  if (response.response.docs.length === 0) {
+    createCardNotFound();
+  }
+  let normalizedData = normalaizData(response.response.docs);
+  renderNews(normalizedData);
   // } catch (err) {
   //   Notify.failure('Sorry, an error occurred, try again later');
   // }
