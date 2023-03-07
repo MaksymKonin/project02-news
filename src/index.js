@@ -1,9 +1,8 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import changeTheme from './js/changeTheme';
 import { userPositionConsent, weatherMarkup } from './js/weatherServiceMain';
-import createCalendar from './js/renderCalendar';
+import { createCalendar, calendarApiService } from './js/renderCalendar';
 import NewsApiService from './js/newsApiService';
-import calendarApiService from './js/calendarApiService';
 import normalaizData from './js/normalaizData';
 import {
   renderNews,
@@ -22,7 +21,10 @@ let haveReadArray = [];
 let favoritesNewsArray = [];
 
 changeTheme();
+
 createCalendar();
+
+
 //---render categories---
 
 const categoriesAction = createListCategories();
@@ -134,18 +136,19 @@ async function createNewsCategory() {
   // }
 }
 //ф-я запиту по даті новин
-async function dataNews() {
-  const response = await calendarApiService();
-  try {
-    if (response.response.docs.length === 0) {
-      createCardNotFound();
-    }
-    let normalizedData = normalaizData(response.response.docs);
-    renderNews(normalizedData);
-  } catch (err) {
-    Notify.failure('Sorry, an error occurred, try again later');
-  }
-}
+// async function dataNews(selectedDate) {
+//   const response = await calendarApiService();
+//   try {
+//     if (response.response.docs.length === 0) {
+//       createCardNotFound();
+//     }
+//     let normalizedData = normalaizData(response.response.docs);
+//     renderNews(normalizedData);
+//   } catch (err) {
+//     Notify.failure('Sorry, an error occurred, try again later');
+//   }
+// }
+
 //ф-я запиту список категорій
 async function createListCategories() {
   const arrayCategories = [];
