@@ -1,9 +1,8 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import changeTheme from './js/changeTheme';
 import { userPositionConsent, weatherMarkup } from './js/weatherServiceMain';
-import createCalendar from './js/renderCalendar';
+import { createCalendar, calendarApiService } from './js/renderCalendar';
 import NewsApiService from './js/newsApiService';
-import calendarApiService from './js/calendarApiService';
 import normalaizData from './js/normalaizData';
 import {
   renderNews,
@@ -17,7 +16,10 @@ import localStorage from './js/localStorage';
 const newsApiService = new NewsApiService();
 
 changeTheme();
+
 createCalendar();
+
+
 //---render categories---
 
 const categoriesAction = createListCategories();
@@ -96,7 +98,7 @@ async function createNewsCategory() {
   }
 }
 //ф-я запиту по даті новин
-async function dataNews() {
+async function dataNews(selectedDate) {
   const response = await calendarApiService();
   try {
     if (response.response.docs.length === 0) {
