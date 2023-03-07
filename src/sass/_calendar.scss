@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 16px 48px;
+  padding: 28px 36px 60px 0px;
 
   &-calendar {
     display: flex;
@@ -93,20 +93,36 @@
 }
 
 .dark-theme {
+  .filters-section-calendar-text {
+    color: var(--text-color-dark-theme);
+  }
   .filters-section-calendar-wrapper-date {
     background-color: var(--background-color-dark);
     border-color: var(--text-color-dark-theme);
-    color: var(--text-color-dark-theme);
-
+    color: rgba(244, 244, 244, 0.4);
     &.active {
       background-color: var(--color-active-btn);
       border-color: var(--color-active-btn);
+      color: var(--color-btn-white);
     }
   }
-  .filters-section-calendar-wrapper {
-    &:after {
-      background: url(../images/calendar-arrow-grey.svg) no-repeat center center;
-      background-size: cover;
+  @include desktop {
+    .filters-section-calendar-wrapper {
+      &:after {
+        background: url(../images/calendar-arrow-grey.svg) no-repeat center
+          center;
+        background-size: cover;
+      }
+
+      @include tablet {
+        .filters-section-calendar-wrapper {
+          &:after {
+            background: url(../images/calendar-arrow-down-dark-theme.svg)
+              no-repeat center center;
+            background-size: cover;
+          }
+        }
+      }
     }
 
     &.active {
