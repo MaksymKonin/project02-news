@@ -6,6 +6,7 @@
 }
 
 .status-reed {
+  display: none;
   position: absolute;
   width: 64px;
   height: 19px;
@@ -152,4 +153,11 @@
   font-size: 16px;
   line-height: 1.4;
   color: #4440f7;
+}
+
+.dark-theme {
+  .page-url,
+  .abstract-text {
+    color: var(--text-color-dark-theme);
+  }
 }
