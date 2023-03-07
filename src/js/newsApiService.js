@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-const CATEGORIES_NEWS_URL = 'https://api.nytimes.com/svc/news/v3/content/inyt';
 const SEARCH_NEWS_URL =
   'https://api.nytimes.com/svc/search/v2/articlesearch.json';
 const POPULAR_NEWS_URL = 'https://api.nytimes.com/svc/mostpopular/v2/viewed';
@@ -9,12 +8,12 @@ const CATEGORIES_LIST_URL =
 const POPULAR_NEWS_DAYS = 7;
 const API_KEY = 'H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM';
 
-
 export default class newsApiService {
   constructor() {
     this.searchQuery = '';
-    this.selectedСategories = '';
-    this.page = 1;
+    this.selectedCategories = '';
+    this.selectedDate = '';
+    this.page = 0;
     this.loadCards = 0;
   }
 
@@ -64,9 +63,22 @@ export default class newsApiService {
   }
 
   getcategoryNews() {
-    return fetch(
-      `${CATEGORIES_NEWS_URL}/${this.selectedСategories}.json?api-key=${API_KEY}`
-    ).then(responce => {
+    // формат дати
+    const date = new Date(this.selectedDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
+    // формат категорій
+    let FormatSelectedCategories = null;
+    if (this.selectedCategories.length !== 0) {
+      FormatSelectedCategories = this.selectedCategories.join('", "');
+    }
+
+    const searchUrl = `?pub_date=${dateString}&api-key=${API_KEY}`;
+    const params = `&fq=news_desk:(${FormatSelectedCategories})&page=${this.page}`;
+
+    return fetch(`${SEARCH_NEWS_URL}${searchUrl}${params}`).then(responce => {
       if (!responce.ok) {
         throw new Error(responce.statusText);
       }

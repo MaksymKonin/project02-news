@@ -1,10 +1,7 @@
 .js-card {
-  width: 395px;
-  height: 395px;
-  margin: 12px 16px 170px 16px;
 }
 
-.button-type {
+.use-text-tape {
   position: relative;
 }
 
@@ -41,7 +38,7 @@
 
 .status-favorite {
   position: absolute;
-  left: 255px;
+  right: 12px;
   top: 220px;
   max-width: 170px;
   font-family: 'Manrope';
@@ -58,8 +55,50 @@
   cursor: pointer;
 }
 
-.card-img {
+// .add-status {
+//   display: none;
+// }
+
+.add-status::after {
+  content: '';
+  width: 14px;
+  height: 12px;
+  background: url(../images/heart-empty.svg) no-repeat center center;
+  background-size: cover;
+  display: block;
+  position: absolute;
+  top: 8px;
+  right: 14px;
+}
+
+.remove-status {
+  display: none;
+  width: 168px;
+}
+
+.remove-status::after {
+  content: '';
+  width: 14px;
+  height: 12px;
+  background: url(../images/heart-full.svg) no-repeat center center;
+  background-size: cover;
+  display: block;
+  position: absolute;
+  top: 8px;
+  right: 14px;
+}
+
+.card-img-wrapper {
+  height: 262px;
+  min-height: 262px;
+  overflow: hidden;
   margin-bottom: 20px;
+}
+
+.card-img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .page-url {
