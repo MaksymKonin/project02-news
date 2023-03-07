@@ -11,6 +11,7 @@ import {
 } from './js/renderNews';
 import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
+import { renderPagination, slicePage,activePageOnPagination } from './js/pagination';
 import LocalStorageService from './js/localStorage';
 const localStorageService = new LocalStorageService();
 const newsApiService = new NewsApiService();
@@ -19,11 +20,11 @@ const HAVE_READ_ID = 'have-read-id';
 const FAVORITES_NEWS = 'favorite-news';
 let haveReadArray = [];
 let favoritesNewsArray = [];
+let queryStorage = null;
 
 changeTheme();
 
 createCalendar();
-
 
 //---render categories---
 
@@ -54,6 +55,7 @@ if (loadingSavedFilters()) {
 refs.formEl.addEventListener('submit', onFormSubmit);
 refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
 refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
+refs.containerPaginationEl.addEventListener('click', onPaginationClick);
 
 //ф-я обробка кліку по кнопці форми
 function onFormSubmit(evt) {
@@ -70,6 +72,17 @@ function onCategoriesClick(evt) {
   newsApiService.resetData();
   selectedCategories(evt);
 }
+
+//ф-я обробка кліку по пагінації/вибір номера сторінки
+function onPaginationClick(evt) {
+  evt.preventDefault();
+  clearMarkupNews();
+  const pageNum = evt.target.innerHTML;
+  activePageOnPagination(pageNum)
+  slicePage(pageNum, queryStorage);
+}
+
+
 //ф-я запиту новин по назві
 async function searchNews() {
   clearMarkupNews();
@@ -79,12 +92,15 @@ async function searchNews() {
       createCardNotFound();
     }
     let normalizedData = normalaizData(response.response.docs);
-    renderNews(normalizedData);
-
+    // -----------------------------------------------------------
+    queryStorage = [...normalizedData];
+    // console.log('queryStorage від запиту getsearchNews ', queryStorage);
+    let paginationPage = renderPagination(queryStorage);
+    renderNews(paginationPage);
+    //  renderNews(normalizedData);
+    // ------------------------------------------------------
     saveHaveReadNews();
-
     saveFavoriteNews(normalizedData);
-
     removeFavoriteNews(normalizedData);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
@@ -99,19 +115,27 @@ async function createpopularNews() {
       createCardNotFound();
     }
     let normalizedData = normalaizData(response.results);
-    renderNews(normalizedData);
+    // -----------------------------------------------------------
+    queryStorage = [...normalizedData];
+    // console.log('queryStorage від запиту getpopularNews', queryStorage);
 
-    setDefaultParams(normalizedData);
+    let paginationPage = renderPagination(queryStorage);
+
+    renderNews(paginationPage);
+    // renderNews(normalizedData);
+    // ------------------------------------------------------
+    setDefaultParams(paginationPage);
 
     saveHaveReadNews();
 
-    saveFavoriteNews(normalizedData);
+    saveFavoriteNews(paginationPage);
 
-    removeFavoriteNews(normalizedData);
+    removeFavoriteNews(paginationPage);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
 }
+
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
   const response = await newsApiService.getcategoryNews();
@@ -120,16 +144,23 @@ async function createNewsCategory() {
   if (response.response.docs.length === 0) {
     createCardNotFound();
   }
+
   let normalizedData = normalaizData(response.response.docs);
-  renderNews(normalizedData);
+  // -----------------------------------------------------------
+  queryStorage = [...normalizedData];
+  // console.log('queryStorage від запиту getcategoryNews ', queryStorage);
+  let paginationPage = renderPagination(queryStorage);
+  renderNews(paginationPage);
+  // renderNews(normalizedData);
+  // ------------------------------------------------------
 
-  setDefaultParams(normalizedData);
+  setDefaultParams(paginationPage);
 
-  saveHaveReadNews(normalizedData);
+  saveHaveReadNews(paginationPage);
 
-  saveFavoriteNews(normalizedData);
+  saveFavoriteNews(paginationPage);
 
-  removeFavoriteNews(normalizedData);
+  removeFavoriteNews(paginationPage);
 
   // } catch (err) {
   //   Notify.failure('Sorry, an error occurred, try again later');
