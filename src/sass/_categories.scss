@@ -1,6 +1,7 @@
 .filters-section-categories {
   position: relative;
   margin-right: 25px;
+border-radius: 20px;
 }
 
 .categories-form {
@@ -8,6 +9,7 @@
   display: flex;
   justify-content: space-between;
   width: 95%;
+  
 }
 
 .btn-categories,
@@ -45,7 +47,7 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 1.33;
-  text-align: center;
+  text-align: left;
   color: var(--color-active-btn);
   background-color: var(--color-btn-white);
   gap: 12px;
