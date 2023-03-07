@@ -58,13 +58,28 @@ function onFormSubmit(evt) {
   searchNews();
 }
 //ф-я обробка кліку по категоріям
+let categoryButton;
+
 function onCategoriesClick(evt) {
   evt.preventDefault();
   newsApiService.resetData();
   clearMarkupNews();
   selectedCategories(evt);
   createNewsCategory();
+  let target = evt.target;
+  // console.log(target);
+  if (target.nodeName !== 'BUTTON') return;
+  colorBtn(target);
+};
+
+function colorBtn(btn) {
+    categoryButton = btn;
+    if (categoryButton) {
+      categoryButton.classList.toggle('btn-color')
+      categoryButton.classList.remove('btn-categories:focus')
+    };  
 }
+
 //ф-я запиту новин по назві
 async function searchNews() {
   clearMarkupNews();
