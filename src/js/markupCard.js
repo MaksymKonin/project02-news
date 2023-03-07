@@ -10,7 +10,7 @@ export default function markupCard(card) {
     published_date,
   } = card;
   return `
-    <li data-id-news ="${id_news}" class="js-card">
+    <li data-id-news="${id_news}" class="js-card">
       <div class="use-text-tape">
         <span class="status-reed">Have read</span>
         <span class="job-text">"${section}"</span>

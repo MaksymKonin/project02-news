@@ -15,7 +15,7 @@ import LocalStorageService from './js/localStorage';
 const localStorageService = new LocalStorageService();
 const newsApiService = new NewsApiService();
 
-const HAVE_READ_ID = 'have-read-id';
+const HAVE_READ = 'have-read-id';
 const FAVORITES_NEWS = 'favorite-news';
 let haveReadArray = [];
 let favoritesNewsArray = [];
@@ -86,6 +86,9 @@ async function searchNews() {
     saveFavoriteNews(normalizedData);
 
     removeFavoriteNews(normalizedData);
+
+    setDefaultParams(normalizedData)
+
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -108,6 +111,7 @@ async function createpopularNews() {
     saveFavoriteNews(normalizedData);
 
     removeFavoriteNews(normalizedData);
+
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -130,6 +134,8 @@ async function createNewsCategory() {
   saveFavoriteNews(normalizedData);
 
   removeFavoriteNews(normalizedData);
+
+  setDefaultParams(normalizedData)
 
   // } catch (err) {
   //   Notify.failure('Sorry, an error occurred, try again later');
@@ -209,17 +215,31 @@ function loadingSavedFilters() {
 }
 
 function saveHaveReadNews() {
+  const haveReadData = localStorageService.load(HAVE_READ)
+  if (haveReadData) {
+    haveReadData.map(haveReadElement => {
+      haveReadArray.push(haveReadElement.id)
+    }) 
+  }
+
+  const currentDate = new Date().getTime()
+  
   const readMoreButtons = document.querySelectorAll('.read-more');
   let readMoreArray = Array.from(readMoreButtons);
 
   readMoreArray.map(readMoreLink => {
     readMoreLink.addEventListener('click', event => {
+      const haveReadStatus = event.target.parentNode.parentNode.parentNode.firstElementChild
+      haveReadStatus.style.display = "block"
+
       const parentLi = event.target.parentNode.parentNode.parentNode.parentNode;
       const parentLiId = parentLi.dataset.idNews;
       const isIncludeId = haveReadArray.includes(parentLiId);
+
       if (!isIncludeId) {
-        haveReadArray.push(parentLiId);
-        localStorageService.save(HAVE_READ_ID, JSON.stringify(haveReadArray));
+        const haveReadObj = { id: parentLiId, date: currentDate }
+        haveReadArray.push(haveReadObj);
+        localStorageService.save(HAVE_READ, haveReadArray);
       }
     });
   });
@@ -252,8 +272,16 @@ function saveFavoriteNews(normalizedData) {
 
 function removeFavoriteNews(normalizedData) {
   const removeFavoriteButtons = document.querySelectorAll('.remove-status-js');
-
   let removeFavoriteButtonsArray = Array.from(removeFavoriteButtons);
+
+  let favoriteNewsID = [];
+
+  favoritesNewsArray = localStorageService.load(FAVORITES_NEWS) || []
+  if (favoritesNewsArray.length !== 0) {
+    favoritesNewsArray.map(item => {
+      favoriteNewsID.push(item.id_news)
+    })
+  }
 
   removeFavoriteButtonsArray.map(removeButtonHTML => {
     removeButtonHTML.addEventListener('click', event => {
@@ -267,11 +295,11 @@ function removeFavoriteNews(normalizedData) {
 
       normalizedData.map(element => {
         if (String(element.id_news) === parentLiId) {
-          const index = favoritesNewsArray.indexOf(element);
+          const index = favoriteNewsID.indexOf(element.id_news);
           favoritesNewsArray.splice(index, 1);
           localStorageService.save(
             FAVORITES_NEWS,
-            JSON.stringify(favoritesNewsArray)
+            favoritesNewsArray
           );
         }
       });
@@ -281,39 +309,48 @@ function removeFavoriteNews(normalizedData) {
 
 function setDefaultParams(normalizedData) {
   const favoriteNews = localStorageService.load(FAVORITES_NEWS);
+  const haveRead = localStorageService.load(HAVE_READ)
+
+  let haveReadId = []
+  
+  if (haveRead.length !== 0) {
+    haveRead.map(haveReadItem => {
+      haveReadId.push(haveReadItem.id)
+    })
+  } 
+
+  let favoriteNewsID = [];
+
   if (favoriteNews) {
-    const favoriteNewsParse = JSON.parse(favoriteNews);
-
+    favoriteNews.map(item => {
+      favoriteNewsID.push(item.id_news)
+    })
     normalizedData.map(element => {
-      const test = favoriteNewsParse.includes(element);
-      // if (favoriteNewsParse)
-      // if (String(element.id_news) === parentLiId) {
-      //   const index = favoritesNewsArray.indexOf(element)
-      //   favoritesNewsArray.splice(index, 1)
-      //   localStorage.save(FAVORITES_NEWS, JSON.stringify(favoritesNewsArray))
+      const isFavorite = favoriteNewsID.includes(element.id_news);
 
-      // }
+      if (isFavorite) {
+        const favoriteLi = document.querySelector(`[data-id-news="${element.id_news}"]`)
+        const divTape = favoriteLi.firstElementChild
+        const buttonAdd = divTape.querySelector(".add-status-js")
+        const buttonRemove = divTape.querySelector(".remove-status-js")
+
+        buttonAdd.style.display = "none"
+        buttonRemove.style.display = "block"
+
+        
+      }
+
+      const isHaveRead = haveReadId.includes(String(element.id_news));
+
+      if (isHaveRead) {
+        const haveReadLi = document.querySelector(`[data-id-news="${element.id_news}"]`)
+        const divTape = haveReadLi.firstElementChild
+        const haveReadStatus = divTape.querySelector(".status-reed")
+
+        haveReadStatus.style.display = "block"
+
+        
+      }
     });
   }
-
-  // removeFavoriteButtonsArray.map(removeButtonHTML => {
-  //   removeButtonHTML.addEventListener("click", event => {
-  //     const removeButton = event.target
-  //     const addButton = removeButton.previousElementSibling
-  //     const parentLi = removeButton.parentNode.parentNode;
-  //     const parentLiId = parentLi.dataset.idNews;
-
-  //     addButton.style.display = "block"
-  //     removeButton.style.display = "none"
-
-  //     normalizedData.map(element => {
-  //       if (String(element.id_news) === parentLiId) {
-  //         const index = favoritesNewsArray.indexOf(element)
-  //         favoritesNewsArray.splice(index, 1)
-  //         localStorage.save(FAVORITES_NEWS, JSON.stringify(favoritesNewsArray))
-
-  //       }
-  //     })
-  //   })
-  // })
 }
