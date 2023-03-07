@@ -91,3 +91,30 @@
     }
   }
 }
+
+.dark-theme {
+  .filters-section-calendar-wrapper-date {
+    background-color: var(--background-color-dark);
+    border-color: var(--text-color-dark-theme);
+    color: var(--text-color-dark-theme);
+
+    &.active {
+      background-color: var(--color-active-btn);
+      border-color: var(--color-active-btn);
+    }
+  }
+  .filters-section-calendar-wrapper {
+    &:after {
+      background: url(../images/calendar-arrow-grey.svg) no-repeat center center;
+      background-size: cover;
+    }
+
+    &.active {
+      &:after {
+        background: url(../images/calendar-arrow-grey-up.svg) no-repeat center
+          center;
+        background-size: cover;
+      }
+    }
+  }
+}

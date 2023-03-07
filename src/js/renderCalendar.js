@@ -2,14 +2,14 @@ import newsApiService from './newsApiService';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { createCardNotFound } from './renderNews';
-import localStorage from "../js/localStorage";
-
+import localStorageService from './localStorage';
 import { refs } from "./refs";
 import normalaizData from "./normalaizData";
 import { renderNews } from "./renderNews";
 import { clearMarkupNews } from "./renderNews";
 
 const SELECTED_DATE = 'selected-date';
+const localStorage = new localStorageService();
 
 // Перейменувати ключ і змінну
 const TEST_SELECTED_CATEGORY = 'test-selected-category';

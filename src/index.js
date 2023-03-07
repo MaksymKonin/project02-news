@@ -136,18 +136,19 @@ async function createNewsCategory() {
   // }
 }
 //ф-я запиту по даті новин
-async function dataNews(selectedDate) {
-  const response = await calendarApiService();
-  try {
-    if (response.response.docs.length === 0) {
-      createCardNotFound();
-    }
-    let normalizedData = normalaizData(response.response.docs);
-    renderNews(normalizedData);
-  } catch (err) {
-    Notify.failure('Sorry, an error occurred, try again later');
-  }
-}
+// async function dataNews(selectedDate) {
+//   const response = await calendarApiService();
+//   try {
+//     if (response.response.docs.length === 0) {
+//       createCardNotFound();
+//     }
+//     let normalizedData = normalaizData(response.response.docs);
+//     renderNews(normalizedData);
+//   } catch (err) {
+//     Notify.failure('Sorry, an error occurred, try again later');
+//   }
+// }
+
 //ф-я запиту список категорій
 async function createListCategories() {
   const arrayCategories = [];
