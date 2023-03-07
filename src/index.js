@@ -76,7 +76,6 @@ function colorBtn(btn) {
     categoryButton = btn;
     if (categoryButton) {
       categoryButton.classList.toggle('btn-color')
-      categoryButton.classList.remove('btn-categories:focus')
     };  
 }
 
