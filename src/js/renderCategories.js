@@ -43,6 +43,7 @@ function renderCategoriesTablet(arr, anchor) {
   // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
+
 function renderCategoriesMobile(arr, anchor) {
   console.log('for Mobile');
   console.log(arr);
