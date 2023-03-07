@@ -24,7 +24,6 @@ changeTheme();
 
 createCalendar();
 
-
 //---render categories---
 
 const categoriesAction = createListCategories();
@@ -87,8 +86,7 @@ async function searchNews() {
 
     removeFavoriteNews(normalizedData);
 
-    setDefaultParams(normalizedData)
-
+    setDefaultParams(normalizedData);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -111,7 +109,6 @@ async function createpopularNews() {
     saveFavoriteNews(normalizedData);
 
     removeFavoriteNews(normalizedData);
-
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -135,7 +132,7 @@ async function createNewsCategory() {
 
   removeFavoriteNews(normalizedData);
 
-  setDefaultParams(normalizedData)
+  setDefaultParams(normalizedData);
 
   // } catch (err) {
   //   Notify.failure('Sorry, an error occurred, try again later');
@@ -172,26 +169,22 @@ function selectedCategories(evt) {
     console.log(0);
   } else if (evt.type === 'change' && evt.target.nodeName === 'SELECT') {
     addSelectedCategories(evt.target.value);
-
-    console.log(1);
   }
-  console.log(2);
-  console.log(newsApiService.selectedCategories);
+  clearMarkupNews();
+  createNewsCategory();
 }
 
 function addSelectedCategories(category) {
-  clearMarkupNews();
-  createNewsCategory();
-
-  if (!arraySelectedCategories.includes(category))
+  if (!arraySelectedCategories.includes(category)) {
     arraySelectedCategories.push(category);
-  else {
+    newsApiService.selectedCategories = arraySelectedCategories;
+    console.log(4);
+  } else {
     arraySelectedCategories.splice(
       arraySelectedCategories.indexOf(category),
       1
     );
   }
-
   let filters = newsApiService.selectedDate
     ? {
         selectedCategories: arraySelectedCategories,
@@ -215,29 +208,30 @@ function loadingSavedFilters() {
 }
 
 function saveHaveReadNews() {
-  const haveReadData = localStorageService.load(HAVE_READ)
+  const haveReadData = localStorageService.load(HAVE_READ);
   if (haveReadData) {
     haveReadData.map(haveReadElement => {
-      haveReadArray.push(haveReadElement.id)
-    }) 
+      haveReadArray.push(haveReadElement.id);
+    });
   }
 
-  const currentDate = new Date().getTime()
-  
+  const currentDate = new Date().getTime();
+
   const readMoreButtons = document.querySelectorAll('.read-more');
   let readMoreArray = Array.from(readMoreButtons);
 
   readMoreArray.map(readMoreLink => {
     readMoreLink.addEventListener('click', event => {
-      const haveReadStatus = event.target.parentNode.parentNode.parentNode.firstElementChild
-      haveReadStatus.style.display = "block"
+      const haveReadStatus =
+        event.target.parentNode.parentNode.parentNode.firstElementChild;
+      haveReadStatus.style.display = 'block';
 
       const parentLi = event.target.parentNode.parentNode.parentNode.parentNode;
       const parentLiId = parentLi.dataset.idNews;
       const isIncludeId = haveReadArray.includes(parentLiId);
 
       if (!isIncludeId) {
-        const haveReadObj = { id: parentLiId, date: currentDate }
+        const haveReadObj = { id: parentLiId, date: currentDate };
         haveReadArray.push(haveReadObj);
         localStorageService.save(HAVE_READ, haveReadArray);
       }
@@ -276,11 +270,11 @@ function removeFavoriteNews(normalizedData) {
 
   let favoriteNewsID = [];
 
-  favoritesNewsArray = localStorageService.load(FAVORITES_NEWS) || []
+  favoritesNewsArray = localStorageService.load(FAVORITES_NEWS) || [];
   if (favoritesNewsArray.length !== 0) {
     favoritesNewsArray.map(item => {
-      favoriteNewsID.push(item.id_news)
-    })
+      favoriteNewsID.push(item.id_news);
+    });
   }
 
   removeFavoriteButtonsArray.map(removeButtonHTML => {
@@ -297,10 +291,7 @@ function removeFavoriteNews(normalizedData) {
         if (String(element.id_news) === parentLiId) {
           const index = favoriteNewsID.indexOf(element.id_news);
           favoritesNewsArray.splice(index, 1);
-          localStorageService.save(
-            FAVORITES_NEWS,
-            favoritesNewsArray
-          );
+          localStorageService.save(FAVORITES_NEWS, favoritesNewsArray);
         }
       });
     });
@@ -309,47 +300,47 @@ function removeFavoriteNews(normalizedData) {
 
 function setDefaultParams(normalizedData) {
   const favoriteNews = localStorageService.load(FAVORITES_NEWS);
-  const haveRead = localStorageService.load(HAVE_READ)
+  const haveRead = localStorageService.load(HAVE_READ);
 
-  let haveReadId = []
-  
-  if (haveRead.length !== 0) {
+  let haveReadId = [];
+
+  if (haveRead) {
     haveRead.map(haveReadItem => {
-      haveReadId.push(haveReadItem.id)
-    })
-  } 
+      haveReadId.push(haveReadItem.id);
+    });
+  }
 
   let favoriteNewsID = [];
 
   if (favoriteNews) {
     favoriteNews.map(item => {
-      favoriteNewsID.push(item.id_news)
-    })
+      favoriteNewsID.push(item.id_news);
+    });
     normalizedData.map(element => {
       const isFavorite = favoriteNewsID.includes(element.id_news);
 
       if (isFavorite) {
-        const favoriteLi = document.querySelector(`[data-id-news="${element.id_news}"]`)
-        const divTape = favoriteLi.firstElementChild
-        const buttonAdd = divTape.querySelector(".add-status-js")
-        const buttonRemove = divTape.querySelector(".remove-status-js")
+        const favoriteLi = document.querySelector(
+          `[data-id-news="${element.id_news}"]`
+        );
+        const divTape = favoriteLi.firstElementChild;
+        const buttonAdd = divTape.querySelector('.add-status-js');
+        const buttonRemove = divTape.querySelector('.remove-status-js');
 
-        buttonAdd.style.display = "none"
-        buttonRemove.style.display = "block"
-
-        
+        buttonAdd.style.display = 'none';
+        buttonRemove.style.display = 'block';
       }
 
       const isHaveRead = haveReadId.includes(String(element.id_news));
 
       if (isHaveRead) {
-        const haveReadLi = document.querySelector(`[data-id-news="${element.id_news}"]`)
-        const divTape = haveReadLi.firstElementChild
-        const haveReadStatus = divTape.querySelector(".status-reed")
+        const haveReadLi = document.querySelector(
+          `[data-id-news="${element.id_news}"]`
+        );
+        const divTape = haveReadLi.firstElementChild;
+        const haveReadStatus = divTape.querySelector('.status-reed');
 
-        haveReadStatus.style.display = "block"
-
-        
+        haveReadStatus.style.display = 'block';
       }
     });
   }

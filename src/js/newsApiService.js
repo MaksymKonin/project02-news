@@ -68,9 +68,9 @@ export default class newsApiService {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    const dateString = `${year}-${month}-${day}`;
+    const dateString = `${year}${month}${day}`;
     // формат категорій
-    let FormatSelectedCategories = null;
+    let FormatSelectedCategories = '""';
     if (this.selectedCategories.length !== 0) {
       FormatSelectedCategories = this.selectedCategories.join('", "');
     }
@@ -88,20 +88,22 @@ export default class newsApiService {
 
   getDateAndCategoryNews(selectedDate, selectedCategories) {
     const SEARCH_BY_DATE = `?facet_field=day_of_week&facet=true&begin_date=${selectedDate}&end_date=${selectedDate}&api-key=${API_KEY}`;
-    let SEARCH_BY_CATEGORIES = "";
+    let SEARCH_BY_CATEGORIES = '';
 
-    if (selectedCategories) { 
-        SEARCH_BY_CATEGORIES = `&fq=news_desk:(${selectedCategories})`;
+    if (selectedCategories) {
+      SEARCH_BY_CATEGORIES = `&fq=news_desk:(${selectedCategories})`;
     }
-    
-    return axios.get(`${SEARCH_NEWS_URL}${SEARCH_BY_DATE}${SEARCH_BY_CATEGORIES}`)
-        .then(response => {
-        if (response.status !== 200 || response.data.response.docs.length === 0) {
+
+    return axios
+      .get(`${SEARCH_NEWS_URL}${SEARCH_BY_DATE}${SEARCH_BY_CATEGORIES}`)
+      .then(response => {
+        if (
+          response.status !== 200 ||
+          response.data.response.docs.length === 0
+        ) {
           throw new Error(response.status);
         }
         return response.data.response.docs;
-    });
-   }
+      });
+  }
 }
-
-
