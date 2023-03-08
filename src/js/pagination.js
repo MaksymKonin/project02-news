@@ -3,11 +3,11 @@ const countCardsOnPage = 8;
 const pageNum = 1; //// при першій загрузці
 
 export function renderPagination(queryStorage) {
-  // console.log('Отримую queryStorage',queryStorage)
+  console.log('Отримую queryStorage',queryStorage)
   refs.containerPaginationEl.innerHTML = '';
 
   const totalPages = Math.ceil(queryStorage.length / countCardsOnPage);
-  // console.log('Всьго сторінок', totalPages)
+  console.log('Всьго сторінок', totalPages)
   let arrayLi = [];
   for (let i = 1; i <= totalPages; i++) {
     // в Li записую номер ітераціі === відповідає номеру сторінки
@@ -17,20 +17,19 @@ export function renderPagination(queryStorage) {
   refs.containerPaginationEl.insertAdjacentHTML('beforeend', arrayLi.join(''));
   const firstListItem = document.querySelector('.js-pagination li:first-child');
   firstListItem.classList.add('pagination__item--current-page');
-
-  let paginationPage = slicePage(pageNum, queryStorage);
+  let paginationPage = onSlicePage(pageNum, queryStorage);
   // отримали масив новин потрібного розміру, який треба розмістити на сторінці з картками
   return paginationPage;
 }
+
+
 //  коли слухач поймай подію клику на пагинаторі визивається  ця фун-ція
 //  (тобто коритувач натиснув "кнопку" переходу на iншу сторінку)
-export function slicePage(pageNum, queryStorage) {
-  // console.log('Це queryStorage', queryStorage)
-  // console.log ('Cтворюю сторінку', pageNum)
+export function onSlicePage(pageNum, queryStorage) {
   let start = (pageNum - 1) * countCardsOnPage;
   let end = start + countCardsOnPage;
   let paginationPage = queryStorage.slice(start, end);
-  // console.log(paginationPage);
+  // console.log("відрізали масив з 8 новин", paginationPage);
   return paginationPage;
 }
 
