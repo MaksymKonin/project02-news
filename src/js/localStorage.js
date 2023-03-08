@@ -3,6 +3,7 @@ const newsApiService = new NewsApiService();
 export default class localStorageService {
   constructor() {
     this.keySavedFilters = 'Filters';
+    this.FAVORITES_NEWS = 'favorite-news';
   }
   save(key, value) {
     try {

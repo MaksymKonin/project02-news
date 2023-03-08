@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const SEARCH_NEWS_URL =
   'https://api.nytimes.com/svc/search/v2/articlesearch.json';
 const POPULAR_NEWS_URL = 'https://api.nytimes.com/svc/mostpopular/v2/viewed';
