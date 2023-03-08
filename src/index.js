@@ -32,7 +32,7 @@ if (localStorageService.loadFilters()) {
 
 refs.formEl.addEventListener('submit', onFormSubmit);
 refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
-refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
+// refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
 refs.containerPaginationEl.addEventListener('click', onPaginationClick);
 
 //ф-я обробка кліку по кнопці форми
@@ -154,14 +154,12 @@ async function createListCategories() {
 }
 // свибір категорій/тестово
 function selectedCategories(evt) {
-  if (evt.type === 'click' && evt.target.nodeName === 'BUTTON') {
+  if (evt.target.nodeName === 'BUTTON') {
     addSelectedCategories(evt.target.textContent);
-    console.log(0);
-  } else if (evt.type === 'change' && evt.target.nodeName === 'SELECT') {
-    addSelectedCategories(evt.target.value);
+    evt.target.classList.toggle('btn-categories-selected');
+    clearMarkupNews();
+    createNewsCategory();
   }
-  clearMarkupNews();
-  createNewsCategory();
 }
 
 function addSelectedCategories(category) {

@@ -36,6 +36,11 @@
   }
 }
 
+.btn-categories-selected {
+  background-color: var(--color-active-btn);
+  color: var(--color-btn-white);
+}
+
 .btn-categories.js-list-others {
   width: 112px;
 }
