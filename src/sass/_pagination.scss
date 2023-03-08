@@ -3,46 +3,73 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  @include mobile {
+    width: 288px;
+    margin-top: 40px;
+    margin-bottom: 60px;  
+  }
+  @include tablet {
+    width: 415px;
+    margin-top: 48px;  
+    margin-bottom: 100px;  
+  }
+  @include desktop {
+    width: 415px;
+    margin-top: 60px;  
+    margin-bottom: 150px;  
+  }
 }
 
 .pagination__list {
-  display: flex;
-  margin-top: 30px;
-  height: 31px;
-  @include tablet {
-    margin-top: 60px;
-  }
-}
+  display: flex; 
+  gap: 10px; //+  по макету 8px
+ }
 
 .pagination__item {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
-  font-size: 12px;
-  line-height: 1.33;
-  color: var(--text-color);
-  fill: var(--text-color);
-  stroke: var(--text-color);
-  cursor: pointer;
-  &:not(:last-child) {
-    margin-right: 16px;
-  }
-}
+  background: var(--background-color-light); 
+  border: 1px solid var(--color-active-btn); 
+  border-radius: 2px; 
+  cursor: pointer; 
 
-.pagination__item--arrow {
-  width: 80px;
-  color: var(--text-color);
-  outline: 1px solid var(--color-active-btn);
-  // background-color: var(--color-active-btn);
+  // color: var(--text-color);
+  // fill: var(--text-color);
+  // stroke: var(--text-color);
+  
+  @include mobile {
+  width: 28px; 
+  height: 28px; 
+  @include font(500, 14, 19px, 0);
+  
+  }
+  @include tablet {
+     width: 33px; 
+     height: 33px;
+     @include font(500, 16, 22px, 0); 
+  }
+  @include desktop {
+       width: 33px; 
+       height: 33px; 
+       @include font(500, 16, 2px, 0);
+  }    
 }
 
 .pagination__item--current-page {
-  width: 30px;
   background-color: var(--color-active-btn);
   color: var(--color-btn-white);
 }
 
-.pagination__item--dots {
-  cursor: default;
-}
+// ------------------------------------------------------
+// .pagination__item--arrow {
+//   width: 80px;
+//   color: var(--text-color);
+//   outline: 1px solid var(--color-active-btn);
+//   background-color: var(--color-active-btn);
+// }
+
+// .pagination__item--dots {
+//   cursor: default;
+// }
