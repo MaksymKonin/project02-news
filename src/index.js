@@ -11,6 +11,11 @@ import {
 } from './js/renderNews';
 import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
+import {
+  renderPagination,
+  slicePage,
+  activePageOnPagination,
+} from './js/pagination';
 import LocalStorageService from './js/localStorage';
 const localStorageService = new LocalStorageService();
 const newsApiService = new NewsApiService();
@@ -19,6 +24,7 @@ const HAVE_READ = 'have-read-id';
 const FAVORITES_NEWS = 'favorite-news';
 let haveReadArray = [];
 let favoritesNewsArray = [];
+let queryStorage = null;
 
 changeTheme();
 
@@ -39,20 +45,14 @@ weatherMarkup();
 //run weather according to location
 userPositionConsent();
 
-let arraySelectedCategories = [];
-
-console.log(loadingSavedFilters());
-if (loadingSavedFilters()) {
-  arraySelectedCategories =
-    newsApiService.selectedCategories !== ''
-      ? newsApiService.selectedCategories
-      : [];
+if (localStorageService.loadFilters()) {
   createNewsCategory();
 } else createpopularNews();
 
 refs.formEl.addEventListener('submit', onFormSubmit);
 refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
 refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
+refs.containerPaginationEl.addEventListener('click', onPaginationClick);
 
 //ф-я обробка кліку по кнопці форми
 function onFormSubmit(evt) {
@@ -69,6 +69,16 @@ function onCategoriesClick(evt) {
   newsApiService.resetData();
   selectedCategories(evt);
 }
+
+//ф-я обробка кліку по пагінації/вибір номера сторінки
+function onPaginationClick(evt) {
+  evt.preventDefault();
+  clearMarkupNews();
+  const pageNum = evt.target.innerHTML;
+  activePageOnPagination(pageNum);
+  slicePage(pageNum, queryStorage);
+}
+
 //ф-я запиту новин по назві
 async function searchNews() {
   clearMarkupNews();
@@ -76,14 +86,18 @@ async function searchNews() {
   try {
     if (response.response.docs.length === 0) {
       createCardNotFound();
+      return;
     }
     let normalizedData = normalaizData(response.response.docs);
-    renderNews(normalizedData);
-
+    // -----------------------------------------------------------
+    queryStorage = [...normalizedData];
+    // console.log('queryStorage від запиту getsearchNews ', queryStorage);
+    let paginationPage = renderPagination(queryStorage);
+    renderNews(paginationPage);
+    //  renderNews(normalizedData);
+    // ------------------------------------------------------
     saveHaveReadNews();
-
     saveFavoriteNews(normalizedData);
-
     removeFavoriteNews(normalizedData);
 
     setDefaultParams(normalizedData);
@@ -98,39 +112,60 @@ async function createpopularNews() {
   try {
     if (response.results.length === 0) {
       createCardNotFound();
+      return;
     }
     let normalizedData = normalaizData(response.results);
-    renderNews(normalizedData);
+    // -----------------------------------------------------------
+    queryStorage = [...normalizedData];
+    // console.log('queryStorage від запиту getpopularNews', queryStorage);
 
-    setDefaultParams(normalizedData);
+    let paginationPage = renderPagination(queryStorage);
 
-    saveHaveReadNews();
+    renderNews(paginationPage);
+    // renderNews(normalizedData);
+    // ------------------------------------------------------
+    setDefaultParams(paginationPage);
 
-    saveFavoriteNews(normalizedData);
+    saveHaveReadNews(normalizedData);
 
-    removeFavoriteNews(normalizedData);
+    saveFavoriteNews(paginationPage);
+
+    removeFavoriteNews(paginationPage);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
 }
+
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
-  const response = await newsApiService.getcategoryNews();
-  console.log(response);
+  let selectedDate = localStorageService.loadDataFilters();
+  let selectedCategories = localStorageService.loadCategoriesFilters();
+  const response = await newsApiService.getDateAndCategoryNews(
+    selectedDate,
+    selectedCategories
+  );
   // try {
   if (response.response.docs.length === 0) {
     createCardNotFound();
+    return;
   }
+
   let normalizedData = normalaizData(response.response.docs);
-  renderNews(normalizedData);
+  // -----------------------------------------------------------
+  queryStorage = [...normalizedData];
+  // console.log('queryStorage від запиту getcategoryNews ', queryStorage);
+  let paginationPage = renderPagination(queryStorage);
+  renderNews(paginationPage);
+  // renderNews(normalizedData);
+  // ------------------------------------------------------
 
-  setDefaultParams(normalizedData);
+  setDefaultParams(paginationPage);
 
-  saveHaveReadNews(normalizedData);
+  saveHaveReadNews(paginationPage);
 
-  saveFavoriteNews(normalizedData);
+  saveFavoriteNews(paginationPage);
 
-  removeFavoriteNews(normalizedData);
+  removeFavoriteNews(paginationPage);
 
   setDefaultParams(normalizedData);
 
@@ -138,19 +173,6 @@ async function createNewsCategory() {
   //   Notify.failure('Sorry, an error occurred, try again later');
   // }
 }
-//ф-я запиту по даті новин
-// async function dataNews(selectedDate) {
-//   const response = await calendarApiService();
-//   try {
-//     if (response.response.docs.length === 0) {
-//       createCardNotFound();
-//     }
-//     let normalizedData = normalaizData(response.response.docs);
-//     renderNews(normalizedData);
-//   } catch (err) {
-//     Notify.failure('Sorry, an error occurred, try again later');
-//   }
-// }
 
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -175,43 +197,38 @@ function selectedCategories(evt) {
 }
 
 function addSelectedCategories(category) {
+  let filters = localStorageService.loadFilters();
+  let arraySelectedCategories = filters?.selectedCategories
+    ? filters.selectedCategories
+    : [];
+  console.log(arraySelectedCategories);
   if (!arraySelectedCategories.includes(category)) {
     arraySelectedCategories.push(category);
-    newsApiService.selectedCategories = arraySelectedCategories;
-    console.log(4);
+    localStorageService.saveCategoriesFilters(arraySelectedCategories);
   } else {
     arraySelectedCategories.splice(
       arraySelectedCategories.indexOf(category),
       1
     );
+    localStorageService.saveCategoriesFilters(arraySelectedCategories);
   }
-  let filters = newsApiService.selectedDate
-    ? {
-        selectedCategories: arraySelectedCategories,
-        selectedDate: newsApiService.selectedDate,
-      }
-    : { selectedCategories: arraySelectedCategories };
-  localStorageService.save(localStorageService.keySavedFilters, filters);
 }
 
-function loadingSavedFilters() {
-  let filters = localStorageService.loadFilters();
-  if (filters) {
-    newsApiService.selectedCategories = filters?.selectedCategories
-      ? filters?.selectedCategories
-      : '';
-    newsApiService.selectedDate = filters?.selectedDate
-      ? filters?.selectedDate
-      : '';
-  }
-  return filters;
-}
-
-function saveHaveReadNews() {
+function saveHaveReadNews(normalizedData) {
   const haveReadData = localStorageService.load(HAVE_READ);
   if (haveReadData) {
     haveReadData.map(haveReadElement => {
-      haveReadArray.push(haveReadElement.id);
+      const haveReadObj = {
+        id: haveReadElement.id,
+        abstract: haveReadElement.abstract,
+        page_url: haveReadElement.page_url,
+        photo_url: haveReadElement.photo_url,
+        published_date: haveReadElement.published_date,
+        section: haveReadElement.section,
+        title: haveReadElement.title,
+        date: haveReadElement.date,
+      };
+      haveReadArray.push(haveReadObj);
     });
   }
 
@@ -231,9 +248,22 @@ function saveHaveReadNews() {
       const isIncludeId = haveReadArray.includes(parentLiId);
 
       if (!isIncludeId) {
-        const haveReadObj = { id: parentLiId, date: currentDate };
-        haveReadArray.push(haveReadObj);
-        localStorageService.save(HAVE_READ, haveReadArray);
+        normalizedData.map(element => {
+          if (String(element.id_news) === parentLiId) {
+            const haveReadObj = {
+              id: parentLiId,
+              abstract: element.abstract,
+              page_url: element.page_url,
+              photo_url: element.photo_url,
+              published_date: element.published_date,
+              section: element.section,
+              title: element.title,
+              date: currentDate,
+            };
+            haveReadArray.push(haveReadObj);
+            localStorageService.save(HAVE_READ, haveReadArray);
+          }
+        });
       }
     });
   });
