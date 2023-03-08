@@ -15,10 +15,14 @@ function goDark(event) {
   if (event.target.checked) {
     refs.bodyEl.classList.remove('ligth-theme');
     refs.bodyEl.classList.add('dark-theme');
+    refs.darkTheme.classList.add('goDark');
+    refs.lightTheme.classList.remove('goLight');
     localStorage.setItem(storageKey, JSON.stringify(theme.dark));
   } else {
     refs.bodyEl.classList.remove('dark-theme');
     refs.bodyEl.classList.add('ligth-theme');
+    refs.darkTheme.classList.remove('goDark');
+    refs.lightTheme.classList.add('goLight');
     localStorage.setItem(storageKey, JSON.stringify(theme.light));
   }
 }

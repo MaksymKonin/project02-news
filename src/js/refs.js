@@ -7,5 +7,7 @@ export const refs = {
   checkBoxEl: document.querySelector('.theme-switch__toggle'),
   bodyEl: document.querySelector('body'),
   dateTimePicker: document.querySelector("#datetime-picker"),
-  calendarWrapper: document.querySelector(".filters-section-calendar-wrapper")
+  calendarWrapper: document.querySelector(".filters-section-calendar-wrapper"),
+  lightTheme: document.querySelector('.light-theme'),
+  darkTheme: document.querySelector('.darh-theme')
 };
