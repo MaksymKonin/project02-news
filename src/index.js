@@ -104,7 +104,7 @@ async function createpopularNews() {
 
     setDefaultParams(normalizedData);
 
-    saveHaveReadNews();
+    saveHaveReadNews(normalizedData);
 
     saveFavoriteNews(normalizedData);
 
@@ -207,11 +207,21 @@ function loadingSavedFilters() {
   return filters;
 }
 
-function saveHaveReadNews() {
+function saveHaveReadNews(normalizedData) {
   const haveReadData = localStorageService.load(HAVE_READ);
   if (haveReadData) {
     haveReadData.map(haveReadElement => {
-      haveReadArray.push(haveReadElement.id);
+      const haveReadObj = {
+        id: haveReadElement.id,
+        abstract: haveReadElement.abstract,
+        page_url: haveReadElement.page_url,
+        photo_url: haveReadElement.photo_url,
+        published_date: haveReadElement.published_date,
+        section: haveReadElement.section,
+        title: haveReadElement.title,
+        date: haveReadElement.date
+      };
+      haveReadArray.push(haveReadObj);
     });
   }
 
@@ -231,9 +241,22 @@ function saveHaveReadNews() {
       const isIncludeId = haveReadArray.includes(parentLiId);
 
       if (!isIncludeId) {
-        const haveReadObj = { id: parentLiId, date: currentDate };
-        haveReadArray.push(haveReadObj);
-        localStorageService.save(HAVE_READ, haveReadArray);
+        normalizedData.map(element => {
+          if (String(element.id_news) === parentLiId) {
+            const haveReadObj = {
+              id: parentLiId,
+              abstract: element.abstract,
+              page_url: element.page_url,
+              photo_url: element.photo_url,
+              published_date: element.published_date,
+              section: element.section,
+              title: element.title,
+              date: currentDate
+            };
+            haveReadArray.push(haveReadObj);
+            localStorageService.save(HAVE_READ, haveReadArray);
+          }
+        });
       }
     });
   });
