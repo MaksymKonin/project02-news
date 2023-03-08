@@ -1,8 +1,8 @@
 import markupCard from './markupCard';
 import { refs } from './refs';
 //ф-я рендер всих карток новин
-function renderNews(normalizedData) {
-  let cards = normalizedData
+function renderNews(paginationPage) {
+  let cards = paginationPage
     .map(Data => {
       return markupCard(Data);
     })
