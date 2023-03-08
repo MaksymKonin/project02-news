@@ -128,7 +128,7 @@ async function createNewsCategory() {
   renderNews(paginationPage);
   // renderNews(normalizedData);
   // ------------------------------------------------------
-
+  setDefaultStatusCategories(selectedCategories);
   changeStatusNews(paginationPage);
 
   // } catch (err) {
@@ -141,6 +141,9 @@ function renderListCategories() {
   categoriesAction.then(r => {
     createCategories(r, refs.containerCategoriesEl);
   });
+  console.log('renderListCategories');
+  let selectedCategories = localStorageService.loadCategoriesFilters();
+  // setDefaultStatusCategories(selectedCategories);
 }
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -157,13 +160,39 @@ function selectedCategories(evt) {
   if (evt.target.nodeName === 'BUTTON') {
     addSelectedCategories(evt.target.textContent);
     evt.target.classList.toggle('btn-categories-selected');
-    console.log(evt.target);
-    const dropdownCategories = document.querySelector('#dropdownDesktopID');
-    console.log(dropdownCategories);
-    dropdownCategories;
-    clearMarkupNews();
-    createNewsCategory();
+    const dropdownCategories = document.querySelector('.js-list-others');
+
+    if (evt.target.parentNode.classList.contains('categories-scrollable')) {
+      const btnItem = document.querySelectorAll(
+        '.categories-scrollable .btn-categories-selected'
+      );
+      if (dropdownCategories.classList.contains('btn-categories-selected')) {
+        if (btnItem?.length === 0)
+          dropdownCategories.classList.remove('btn-categories-selected');
+      } else dropdownCategories.classList.add('btn-categories-selected');
+    }
   }
+  clearMarkupNews();
+  createNewsCategory();
+}
+
+function setDefaultStatusCategories(selectedCategories) {
+  const arrayBtnCategories = document.querySelectorAll('.js-category-anchor');
+  arrayBtnCategories.forEach(btnCategory => {
+    if (selectedCategories.includes(btnCategory.textContent)) {
+      console.log('eee');
+      btnCategory.classList.add('btn-categories-selected');
+    }
+  });
+  const dropdownCategories = document.querySelector('.js-list-others');
+  console.log(dropdownCategories);
+  const btnItem = document.querySelectorAll(
+    '.categories-scrollable .btn-categories-selected'
+  );
+  if (dropdownCategories.classList.contains('btn-categories-selected')) {
+    if (btnItem?.length === 0)
+      dropdownCategories.classList.remove('btn-categories-selected');
+  } else dropdownCategories.classList.add('btn-categories-selected');
 }
 
 function addSelectedCategories(category) {
@@ -171,7 +200,6 @@ function addSelectedCategories(category) {
   let arraySelectedCategories = filters?.selectedCategories
     ? filters.selectedCategories
     : [];
-  console.log(arraySelectedCategories);
   if (!arraySelectedCategories.includes(category)) {
     arraySelectedCategories.push(category);
     localStorageService.saveCategoriesFilters(arraySelectedCategories);
