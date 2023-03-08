@@ -1,8 +1,8 @@
 import markupCard from './markupCard';
 import { refs } from './refs';
 //ф-я рендер всих карток новин
-function renderNews(normalizedData) {
-  let cards = normalizedData
+function renderNews(paginationPage) {
+  let cards = paginationPage
     .map(Data => {
       return markupCard(Data);
     })
@@ -12,6 +12,7 @@ function renderNews(normalizedData) {
 // створення карточки без новин
 function createCardNotFound() {
   refs.weatherCard.classList.add('is-hidden');
+  console.log(5);
   const card = `<div class="not-found-container"><h1 class="not-found-title">We haven’t found news from <br/> this category</h1>
   <div class="not-found-img"></div></div>`;
   refs.containerCardEl.insertAdjacentHTML('beforeend', card);

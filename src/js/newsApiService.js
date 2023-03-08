@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const SEARCH_NEWS_URL =
   'https://api.nytimes.com/svc/search/v2/articlesearch.json';
 const POPULAR_NEWS_URL = 'https://api.nytimes.com/svc/mostpopular/v2/viewed';
@@ -11,9 +9,7 @@ const API_KEY = 'H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM';
 export default class newsApiService {
   constructor() {
     this.searchQuery = '';
-    this.selectedCategories = '';
-    this.selectedDate = '';
-    this.page = 0;
+    this.SEARCH_BY_DATE_URL = this.page = 0;
     this.loadCards = 0;
   }
 
@@ -62,48 +58,26 @@ export default class newsApiService {
     });
   }
 
-  getcategoryNews() {
-    // формат дати
-    const date = new Date(this.selectedDate);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateString = `${year}${month}${day}`;
-    // формат категорій
-    let FormatSelectedCategories = '""';
-    if (this.selectedCategories.length !== 0) {
-      FormatSelectedCategories = this.selectedCategories.join('", "');
-    }
-
-    const searchUrl = `?pub_date=${dateString}&api-key=${API_KEY}`;
-    const params = `&fq=news_desk:(${FormatSelectedCategories})&page=${this.page}`;
-
-    return fetch(`${SEARCH_NEWS_URL}${searchUrl}${params}`).then(responce => {
-      if (!responce.ok) {
-        throw new Error(responce.statusText);
-      }
-      return responce.json();
-    });
-  }
-
   getDateAndCategoryNews(selectedDate, selectedCategories) {
-    const SEARCH_BY_DATE = `?facet_field=day_of_week&facet=true&begin_date=${selectedDate}&end_date=${selectedDate}&api-key=${API_KEY}`;
+    let SEARCH_BY_DATE = '';
     let SEARCH_BY_CATEGORIES = '';
 
     if (selectedCategories) {
       SEARCH_BY_CATEGORIES = `&fq=news_desk:(${selectedCategories})`;
     }
+    console.log(selectedDate);
+    SEARCH_BY_DATE =
+      !selectedDate || selectedDate === null
+        ? `?api-key=${API_KEY}`
+        : `?facet_field=day_of_week&facet=true&begin_date=${selectedDate}&end_date=${selectedDate}&api-key=${API_KEY}`;
 
-    return axios
-      .get(`${SEARCH_NEWS_URL}${SEARCH_BY_DATE}${SEARCH_BY_CATEGORIES}`)
-      .then(response => {
-        if (
-          response.status !== 200 ||
-          response.data.response.docs.length === 0
-        ) {
-          throw new Error(response.status);
-        }
-        return response.data.response.docs;
-      });
+    return fetch(
+      `${SEARCH_NEWS_URL}${SEARCH_BY_DATE}${SEARCH_BY_CATEGORIES}`
+    ).then(responce => {
+      if (!responce.ok) {
+        throw new Error(responce.statusText);
+      }
+      return responce.json();
+    });
   }
 }

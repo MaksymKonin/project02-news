@@ -7,6 +7,7 @@ import { refs } from './refs';
 import normalaizData from './normalaizData';
 import { renderNews } from './renderNews';
 import { clearMarkupNews } from './renderNews';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const SELECTED_DATE = 'selected-date';
 const localStorage = new localStorageService();
@@ -47,28 +48,25 @@ function calendarApiService(date) {
     addZero(date.getFullYear()) +
     addZero(date.getMonth() + 1) +
     addZero(date.getDate());
-
-  localStorage.save(SELECTED_DATE, selectedDate);
-
-  // Прийом категорій з локал сторідж
-  const paramsFromLocalStorage = localStorage.load(TEST_SELECTED_CATEGORY);
-  let selectedCategories = '""';
-
-  // Перевірка наявності вибраних категорій
-  if (paramsFromLocalStorage) {
-    selectedCategories = JSON.parse(paramsFromLocalStorage).join(', ');
-  }
+  console.log(selectedDate);
+  if (selectedDate === localStorage.loadDataFilters()) selectedDate = null;
+  localStorage.saveDataFilters(selectedDate);
+  let selectedCategories = localStorage.loadCategoriesFilters();
 
   const apiService = new newsApiService();
   apiService
     .getDateAndCategoryNews(selectedDate, selectedCategories)
-    .then(articles => {
-      let normalizedData = normalaizData(articles);
+    .then(response => {
+      console.log(response);
+      if (response.response.docs.length === 0) {
+        createCardNotFound();
+        return;
+      }
+      let normalizedData = normalaizData(response.response.docs);
       renderNews(normalizedData);
     })
     .catch(error => {
-      console.log(error);
-      createCardNotFound();
+      Notify.failure('Sorry, an error occurred, try again later');
     });
 }
 
