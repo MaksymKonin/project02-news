@@ -1,24 +1,22 @@
 .filters-section-categories {
   position: relative;
   margin-right: 25px;
-border-radius: 20px;
+  border-radius: 20px;
 }
 
 .categories-form {
   position: absolute;
   display: flex;
   justify-content: space-between;
-  width: 95%;
-  
+  width: 92%;
 }
 
-.btn-categories,
-.btn-categories-others {
+.btn-categories {
   padding: 7.5px 24.5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  margin-left: -25px;
   font-weight: 400;
   font-size: 12px;
   line-height: 1.33;
@@ -37,11 +35,71 @@ border-radius: 20px;
     color: var(--color-btn-white);
   }
 }
+
+.btn-categories.js-list-others {
+  width: 112px;
+}
+
+.cat-list-container {
+  position: absolute;
+  top: 33px;
+
+  margin-left: 0;
+  width: 168px;
+  height: 380px;
+
+  overflow: hidden;
+  z-index: 4;
+  background-color: var(--color-btn-white);
+  border-radius: 20px;
+  filter: drop-shadow(0px 10px 60px rgba(0, 0, 0, 0.1));
+  @include mobile {
+    right: -33px;
+  }
+
+  @include tablet {
+    right: -56px;
+  }
+
+  @include desktop {
+    right: -56px;
+  }
+}
+
+.categories-scrollable {
+  overflow-y: scroll; /* or auto */
+  height: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 14px;
+}
+
+.cat-list-item {
+  display: block;
+  background-color: var(--color-btn-white);
+  color: var(--secondary-text-color);
+  font-family: var(--main-font);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  border: none;
+  margin: 0;
+  margin-bottom: 12px;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+  // outline: 1px solid blue;
+}
+
 .filters-section-categories {
   width: 100%;
   display: flex;
   padding: 0px 24.5px;
-  cursor: pointer;
+
   align-items: center;
   margin: 0 auto;
   font-weight: 400;
@@ -50,7 +108,7 @@ border-radius: 20px;
   text-align: left;
   color: var(--color-active-btn);
   background-color: var(--color-btn-white);
-  gap: 12px;
+  // gap: 12px;
 }
 
 // тут ховаємо форми з категоріями згідно з точками перелому
