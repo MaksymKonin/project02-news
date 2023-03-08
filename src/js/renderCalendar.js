@@ -51,7 +51,7 @@ function calendarApiService(date) {
   console.log(selectedDate);
   if (selectedDate === localStorage.loadDataFilters()) selectedDate = null;
   localStorage.saveDataFilters(selectedDate);
-  selectedCategories = localStorage.loadCategoriesFilters();
+  let selectedCategories = localStorage.loadCategoriesFilters();
 
   const apiService = new newsApiService();
   apiService
