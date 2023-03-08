@@ -1,7 +1,6 @@
 const links = document.querySelectorAll('.navigation-list__link');
 
 export default function setNewActiveLink() {
-  console.log(1);
   const links = document.querySelectorAll('.navigation-list__link');
   links.forEach(link => {
     if (link.classList.contains('navigation-list__link--current'))

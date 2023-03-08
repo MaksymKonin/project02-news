@@ -1,9 +1,8 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import changeTheme from './js/changeTheme';
 import { userPositionConsent, weatherMarkup } from './js/weatherServiceMain';
-import createCalendar from './js/renderCalendar';
+import { createCalendar } from './js/renderCalendar';
 import NewsApiService from './js/newsApiService';
-import calendarApiService from './js/calendarApiService';
 import normalaizData from './js/normalaizData';
 import {
   renderNews,
@@ -12,30 +11,29 @@ import {
 } from './js/renderNews';
 import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
-import localStorage from './js/localStorage';
-
+import {
+  renderPagination,
+  slicePage,
+  activePageOnPagination,
+} from './js/pagination';
+import LocalStorageService from './js/localStorage';
+const localStorageService = new LocalStorageService();
 const newsApiService = new NewsApiService();
-
+import changeStatusNews from './js/changeStatusNews';
+let queryStorage = null;
 changeTheme();
 createCalendar();
-//---render categories---
-
-const categoriesAction = createListCategories();
-categoriesAction.then(r => {
-  createCategories(r, refs.containerCategoriesEl);
-});
-
-//---END OF render categories---
-
-//run default weather
-// renderWeatherCardContainer();
+renderListCategories();
 weatherMarkup();
-//run weather according to location
-userPositionConsent();
-createpopularNews();
+userPositionConsent(); //run weather according to location
+if (localStorageService.loadFilters()) {
+  createNewsCategory();
+} else createpopularNews();
 
 refs.formEl.addEventListener('submit', onFormSubmit);
 refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
+// refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
+refs.containerPaginationEl.addEventListener('click', onPaginationClick);
 
 //ф-я обробка кліку по кнопці форми
 function onFormSubmit(evt) {
@@ -50,22 +48,34 @@ function onFormSubmit(evt) {
 function onCategoriesClick(evt) {
   evt.preventDefault();
   newsApiService.resetData();
-  clearMarkupNews();
-  createNewsCategory();
+  selectedCategories(evt);
 }
+//ф-я обробка кліку по пагінації/вибір номера сторінки
+function onPaginationClick(evt) {
+  evt.preventDefault();
+  clearMarkupNews();
+  const pageNum = evt.target.innerHTML;
+  activePageOnPagination(pageNum);
+  slicePage(pageNum, queryStorage);
+}
+
 //ф-я запиту новин по назві
 async function searchNews() {
   clearMarkupNews();
   const response = await newsApiService.getsearchNews();
-  // try {
-  if (response.response.docs.length === 0) {
-    createCardNotFound();
+  try {
+    if (response.response.docs.length === 0) {
+      createCardNotFound();
+      return;
+    }
+    let normalizedData = normalaizData(response.response.docs);
+    queryStorage = [...normalizedData];
+    let paginationPage = renderPagination(queryStorage);
+    renderNews(paginationPage);
+    changeStatusNews(paginationPage);
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
   }
-  let normalizedData = normalaizData(response.response.docs);
-  renderNews(normalizedData);
-  // } catch (err) {
-  //   Notify.failure('Sorry, an error occurred, try again later');
-  // }
 }
 //ф-я створення популярних новин
 async function createpopularNews() {
@@ -74,39 +84,49 @@ async function createpopularNews() {
   try {
     if (response.results.length === 0) {
       createCardNotFound();
+      return;
     }
     let normalizedData = normalaizData(response.results);
-    renderNews(normalizedData);
+    queryStorage = [...normalizedData];
+    let paginationPage = renderPagination(queryStorage);
+    renderNews(paginationPage);
+    changeStatusNews(paginationPage);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
 }
+
 //ф-я запиту новин по категорії
 async function createNewsCategory() {
-  selectedСategories();
-  const response = await newsApiService.getcategoryNews();
-  try {
-    if (response.results.length === 0) {
-      createCardNotFound();
-    }
-    let normalizedData = normalaizData(response.results);
-    renderNews(normalizedData);
-  } catch (err) {
-    Notify.failure('Sorry, an error occurred, try again later');
-  }
-}
-//ф-я запиту по даті новин
-async function dataNews() {
-  const response = await calendarApiService();
+  let selectedDate = localStorageService.loadDataFilters();
+  let selectedCategories = localStorageService.loadCategoriesFilters();
+  const response = await newsApiService.getDateAndCategoryNews(
+    selectedDate,
+    selectedCategories
+  );
   try {
     if (response.response.docs.length === 0) {
       createCardNotFound();
+      return;
     }
     let normalizedData = normalaizData(response.response.docs);
-    renderNews(normalizedData);
+    queryStorage = [...normalizedData];
+    let paginationPage = renderPagination(queryStorage);
+    renderNews(paginationPage);
+    changeStatusNews(paginationPage);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
+}
+//ф-я рендеру списка категорій
+function renderListCategories() {
+  const categoriesAction = createListCategories();
+  categoriesAction.then(r => {
+    createCategories(r, refs.containerCategoriesEl);
+    let selectedCategories = localStorageService.loadCategoriesFilters();
+    setDefaultStatusCategories(selectedCategories);
+  });
+  console.log('renderListCategories');
 }
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -115,10 +135,89 @@ async function createListCategories() {
   response.results.forEach(element => {
     arrayCategories.push(element.section);
   });
-  // console.log('categories-->', arrayCategories);
   return arrayCategories;
 }
-// свибір категорій/тестово
-function selectedСategories() {
-  newsApiService.selectedСategories = 'automobiles, arts';
+// вибір категорій
+function selectedCategories(evt) {
+  if (evt.target.nodeName === 'BUTTON') {
+    addSelectedCategories(evt.target.textContent);
+    evt.target.classList.toggle('btn-categories-selected');
+    if (evt.target.parentNode.classList.contains('categories-scrollable')) {
+      const btnItem = document.querySelectorAll(
+        '.categories-scrollable .btn-categories-selected'
+      );
+      const dropdownCategoriesArray =
+        document.querySelectorAll('.js-list-others');
+      console.log(dropdownCategoriesArray);
+
+      console.log(btnItem?.length);
+      console.log(btnItem?.length > 3);
+      dropdownCategoriesArray.forEach(dropdownCategories => {
+        if (btnItem?.length > 3) {
+          console.log('add');
+          dropdownCategories.classList.add('btn-categories-selected');
+        } else {
+          console.log('remove');
+          dropdownCategories.classList.remove('btn-categories-selected');
+        }
+      });
+      //   const dropdownCategories =
+      //     evt.target.parentNode.parentNode.previousSibling;
+
+      //   if (dropdownCategories.classList.contains('btn-categories-selected')) {
+      //     if (btnItem?.length === 0)
+      //       dropdownCategories.classList.remove('btn-categories-selected');
+      //   } else dropdownCategories.classList.add('btn-categories-selected');
+    }
+  }
+  clearMarkupNews();
+  createNewsCategory();
+}
+
+function setDefaultStatusCategories(selectedCategories) {
+  if (selectedCategories === '""') {
+    console.log('stop');
+    return;
+  }
+
+  const arrayBtnCategories = document.querySelectorAll('.js-category-anchor');
+  arrayBtnCategories.forEach(btnCategory => {
+    if (selectedCategories.includes(btnCategory.textContent)) {
+      btnCategory.classList.add('btn-categories-selected');
+    }
+  });
+
+  const dropdownCategoriesArray = document.querySelectorAll('.js-list-others');
+  console.log(dropdownCategoriesArray);
+  const btnItem = document.querySelectorAll(
+    '.categories-scrollable .btn-categories-selected'
+  );
+  console.log(btnItem?.length);
+  console.log(btnItem?.length > 3);
+  dropdownCategoriesArray.forEach(dropdownCategories => {
+    if (btnItem?.length > 3) {
+      console.log('add');
+      dropdownCategories.classList.add('btn-categories-selected');
+    } else {
+      console.log('remove');
+      dropdownCategories.classList.remove('btn-categories-selected');
+    }
+  });
+}
+
+function addSelectedCategories(category) {
+  let filters = localStorageService.loadFilters();
+  let arraySelectedCategories = filters?.selectedCategories
+    ? filters.selectedCategories
+    : [];
+  if (!arraySelectedCategories.includes(category)) {
+    arraySelectedCategories.push(category);
+    localStorageService.saveCategoriesFilters(arraySelectedCategories);
+  } else {
+    arraySelectedCategories.splice(
+      arraySelectedCategories.indexOf(category),
+      1
+    );
+    localStorageService.saveCategoriesFilters(arraySelectedCategories);
+  }
 }

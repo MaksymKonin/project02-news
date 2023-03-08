@@ -1,9 +1,7 @@
 const dataNewsDefault = {
   id_news: Math.floor(Math.random() * 10000),
-  photo_url:
-    'https://health.clevelandclinic.org/wp-content/uploads/sites/3/2019/11/chestPain-1263951394-770x533-1-650x428.jpg',
-  page_url:
-    'https://health.clevelandclinic.org/wp-content/uploads/sites/3/2019/11/chestPain-1263951394-770x533-1-650x428.jpg',
+  photo_url: 'https://kyryloca.github.io/pictureholder/news-placeholder.png',
+  page_url: 'https://kyryloca.github.io/pictureholder/news-placeholder.png',
   section: 'uncategorized',
   statusFavorite: 'Add to favorite',
   title: 'title',
@@ -73,3 +71,5 @@ function addZero(num) {
     return num;
   }
 }
+
+export {};

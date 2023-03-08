@@ -1,7 +1,8 @@
 .container {
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;;
+  // margin-left: auto;
+  // margin-right: auto;
   padding: 0 16px;
 
   @include mobile {

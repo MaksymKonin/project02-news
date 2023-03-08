@@ -1,4 +1,3 @@
-const CATEGORIES_NEWS_URL = 'https://api.nytimes.com/svc/news/v3/content/inyt';
 const SEARCH_NEWS_URL =
   'https://api.nytimes.com/svc/search/v2/articlesearch.json';
 const POPULAR_NEWS_URL = 'https://api.nytimes.com/svc/mostpopular/v2/viewed';
@@ -10,8 +9,7 @@ const API_KEY = 'H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM';
 export default class newsApiService {
   constructor() {
     this.searchQuery = '';
-    this.selectedСategories = '';
-    this.page = 1;
+    this.SEARCH_BY_DATE_URL = this.page = 0;
     this.loadCards = 0;
   }
 
@@ -60,9 +58,20 @@ export default class newsApiService {
     });
   }
 
-  getcategoryNews() {
+  getDateAndCategoryNews(selectedDate, selectedCategories) {
+    let SEARCH_BY_DATE = '';
+    let SEARCH_BY_CATEGORIES = '';
+
+    if (selectedCategories) {
+      SEARCH_BY_CATEGORIES = `&fq=news_desk:(${selectedCategories})`;
+    }
+    SEARCH_BY_DATE =
+      !selectedDate || selectedDate === null
+        ? `?api-key=${API_KEY}`
+        : `?facet_field=day_of_week&facet=true&begin_date=${selectedDate}&end_date=${selectedDate}&api-key=${API_KEY}`;
+
     return fetch(
-      `${CATEGORIES_NEWS_URL}/${this.selectedСategories}.json?api-key=${API_KEY}`
+      `${SEARCH_NEWS_URL}${SEARCH_BY_DATE}${SEARCH_BY_CATEGORIES}`
     ).then(responce => {
       if (!responce.ok) {
         throw new Error(responce.statusText);
