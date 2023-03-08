@@ -1,7 +1,7 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import changeTheme from './js/changeTheme';
 import { userPositionConsent, weatherMarkup } from './js/weatherServiceMain';
-import { createCalendar, calendarApiService } from './js/renderCalendar';
+import { createCalendar } from './js/renderCalendar';
 import NewsApiService from './js/newsApiService';
 import normalaizData from './js/normalaizData';
 import {
@@ -69,13 +69,9 @@ async function searchNews() {
       return;
     }
     let normalizedData = normalaizData(response.response.docs);
-    // -----------------------------------------------------------
     queryStorage = [...normalizedData];
-    // console.log('queryStorage від запиту getsearchNews ', queryStorage);
     let paginationPage = renderPagination(queryStorage);
     renderNews(paginationPage);
-    //  renderNews(normalizedData);
-    // ------------------------------------------------------
     changeStatusNews(paginationPage);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
@@ -91,15 +87,9 @@ async function createpopularNews() {
       return;
     }
     let normalizedData = normalaizData(response.results);
-    // -----------------------------------------------------------
     queryStorage = [...normalizedData];
-    // console.log('queryStorage від запиту getpopularNews', queryStorage);
-
     let paginationPage = renderPagination(queryStorage);
-
     renderNews(paginationPage);
-    // renderNews(normalizedData);
-    // ------------------------------------------------------
     changeStatusNews(paginationPage);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
@@ -114,35 +104,29 @@ async function createNewsCategory() {
     selectedDate,
     selectedCategories
   );
-  // try {
-  if (response.response.docs.length === 0) {
-    createCardNotFound();
-    return;
+  try {
+    if (response.response.docs.length === 0) {
+      createCardNotFound();
+      return;
+    }
+    let normalizedData = normalaizData(response.response.docs);
+    queryStorage = [...normalizedData];
+    let paginationPage = renderPagination(queryStorage);
+    renderNews(paginationPage);
+    changeStatusNews(paginationPage);
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
   }
-
-  let normalizedData = normalaizData(response.response.docs);
-  // -----------------------------------------------------------
-  queryStorage = [...normalizedData];
-  // console.log('queryStorage від запиту getcategoryNews ', queryStorage);
-  let paginationPage = renderPagination(queryStorage);
-  renderNews(paginationPage);
-  // renderNews(normalizedData);
-  // ------------------------------------------------------
-  changeStatusNews(paginationPage);
-
-  // } catch (err) {
-  //   Notify.failure('Sorry, an error occurred, try again later');
-  // }
 }
-
+//ф-я рендеру списка категорій
 function renderListCategories() {
   const categoriesAction = createListCategories();
   categoriesAction.then(r => {
     createCategories(r, refs.containerCategoriesEl);
+    let selectedCategories = localStorageService.loadCategoriesFilters();
+    setDefaultStatusCategories(selectedCategories);
   });
   console.log('renderListCategories');
-  // let selectedCategories = localStorageService.loadCategoriesFilters();
-  // setDefaultStatusCategories(selectedCategories);
 }
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -151,24 +135,39 @@ async function createListCategories() {
   response.results.forEach(element => {
     arrayCategories.push(element.section);
   });
-  // console.log('categories-->', arrayCategories);
   return arrayCategories;
 }
-// свибір категорій/тестово
+// вибір категорій
 function selectedCategories(evt) {
   if (evt.target.nodeName === 'BUTTON') {
     addSelectedCategories(evt.target.textContent);
     evt.target.classList.toggle('btn-categories-selected');
-    const dropdownCategories = document.querySelector('.js-list-others');
-
     if (evt.target.parentNode.classList.contains('categories-scrollable')) {
       const btnItem = document.querySelectorAll(
         '.categories-scrollable .btn-categories-selected'
       );
-      if (dropdownCategories.classList.contains('btn-categories-selected')) {
-        if (btnItem?.length === 0)
+      const dropdownCategoriesArray =
+        document.querySelectorAll('.js-list-others');
+      console.log(dropdownCategoriesArray);
+
+      console.log(btnItem?.length);
+      console.log(btnItem?.length > 3);
+      dropdownCategoriesArray.forEach(dropdownCategories => {
+        if (btnItem?.length > 3) {
+          console.log('add');
+          dropdownCategories.classList.add('btn-categories-selected');
+        } else {
+          console.log('remove');
           dropdownCategories.classList.remove('btn-categories-selected');
-      } else dropdownCategories.classList.add('btn-categories-selected');
+        }
+      });
+      //   const dropdownCategories =
+      //     evt.target.parentNode.parentNode.previousSibling;
+
+      //   if (dropdownCategories.classList.contains('btn-categories-selected')) {
+      //     if (btnItem?.length === 0)
+      //       dropdownCategories.classList.remove('btn-categories-selected');
+      //   } else dropdownCategories.classList.add('btn-categories-selected');
     }
   }
   clearMarkupNews();
@@ -176,22 +175,34 @@ function selectedCategories(evt) {
 }
 
 function setDefaultStatusCategories(selectedCategories) {
+  if (selectedCategories === '""') {
+    console.log('stop');
+    return;
+  }
+
   const arrayBtnCategories = document.querySelectorAll('.js-category-anchor');
   arrayBtnCategories.forEach(btnCategory => {
     if (selectedCategories.includes(btnCategory.textContent)) {
-      console.log('eee');
       btnCategory.classList.add('btn-categories-selected');
     }
   });
-  const dropdownCategories = document.querySelector('.js-list-others');
-  console.log(dropdownCategories);
+
+  const dropdownCategoriesArray = document.querySelectorAll('.js-list-others');
+  console.log(dropdownCategoriesArray);
   const btnItem = document.querySelectorAll(
     '.categories-scrollable .btn-categories-selected'
   );
-  if (dropdownCategories.classList.contains('btn-categories-selected')) {
-    if (btnItem?.length === 0)
+  console.log(btnItem?.length);
+  console.log(btnItem?.length > 3);
+  dropdownCategoriesArray.forEach(dropdownCategories => {
+    if (btnItem?.length > 3) {
+      console.log('add');
+      dropdownCategories.classList.add('btn-categories-selected');
+    } else {
+      console.log('remove');
       dropdownCategories.classList.remove('btn-categories-selected');
-  } else dropdownCategories.classList.add('btn-categories-selected');
+    }
+  });
 }
 
 function addSelectedCategories(category) {
