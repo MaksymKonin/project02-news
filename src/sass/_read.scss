@@ -1,8 +1,25 @@
+.read-container {
+  min-height: calc(100vh - 272px);
+  @include mobile {
+    min-height: calc(100vh - 245px);
+  }
+  @include tablet {
+    min-height: calc(100vh - 272px);
+  }
+  @include desktop {
+    min-height: calc(100vh - 272px);
+  }
+
+  .news-container {
+    justify-content: start;
+  }
+}
+
 .accordion {
-  background-color: #fff;
+  background-color: #f4f4f4;
   color: #444;
   cursor: pointer;
-  padding: 20px 20px 5px;
+  padding: 20px 0px 5px;
   width: 100%;
   border: none;
   text-align: left;
@@ -21,9 +38,9 @@
   }
 }
 .panel {
-  padding: 0 18px;
+  padding-top: 40px;
   display: none;
-  background-color: white;
+  background-color: #f4f4f4;
   overflow: hidden;
   border-color: #929292;
 }

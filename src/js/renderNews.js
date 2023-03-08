@@ -11,7 +11,7 @@ function renderNews(paginationPage) {
 }
 // створення карточки без новин
 function createCardNotFound() {
-  refs.weatherCard.classList.add('is-display-none');
+  refs.weatherCard?.classList.add('is-display-none');
   console.log(refs.weatherCard);
   console.log('is-display-none');
   const card = `<div class="not-found-container"><h1 class="not-found-title">We haven’t found news from <br/> this category</h1>
