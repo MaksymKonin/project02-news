@@ -1,40 +1,20 @@
 .filters-section {
-  @include mobile {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 24px;
-    padding-bottom: 40px;
-  }
-
-  @include tablet {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 28px;
-    padding-bottom: 48px;
-  }
-
-  @include desktop {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 28px 52px 60px 16px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 16px 48px;
 
   &-calendar {
     display: flex;
 
     &-text {
-      display: none;
-
       font-weight: 700;
       font-size: 18px;
 
       color: var(--text-color);
 
       margin-right: 37px;
-      margin-left: 111px;
+      display: none;
 
       @include desktop {
         display: initial;
@@ -48,27 +28,13 @@
       &:before {
         content: '';
         position: absolute;
-
-        @include mobile {
-          background: url(../images/calendar-icon-mobile.svg) no-repeat center
-            center;
-          background-size: cover;
-          top: 6.79px;
-          left: 13.58px;
-          display: block;
-          width: 15.83px;
-          height: 15.83px;
-        }
-
-        @include tablet {
-          background: url(../images/calendar-icon.svg) no-repeat center center;
-          background-size: cover;
-          // left: 12px;
-          // top: 6px;
-          display: block;
-          width: 20px;
-          height: 20px;
-        }
+        background: url(../images/calendar-icon.svg) no-repeat center center;
+        background-size: cover;
+        left: 12px;
+        top: 6px;
+        display: block;
+        width: 20px;
+        height: 20px;
       }
 
       &:after {
@@ -82,11 +48,6 @@
         display: block;
         width: 15px;
         height: 9px;
-
-        @include mobile {
-          right: 12px;
-          top: 11px;
-        }
       }
 
       &.active {
@@ -104,32 +65,21 @@
       }
 
       &-date {
-        @include mobile {
-          width: 151px;
-          height: 31px;
+        width: 168px;
+        height: 31px;
 
-          font-weight: 400;
-          font-size: 12px;
-          line-height: 1.75;
-          letter-spacing: 0.02em;
+        border: 1px solid var(--text-color);
+        border-radius: 20px;
 
-          border: 1px solid var(--text-color);
-          border-radius: 20px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
 
-          color: rgba(17, 19, 33, 0.4);
+        letter-spacing: 0.02em;
 
-          text-align: center;
-          background-color: var(--background-color-light);
-        }
+        color: rgba(17, 19, 33, 0.4);
 
-        @include tablet {
-          width: 168px;
-
-          font-weight: 400;
-          font-size: 14px;
-          line-height: 21px;
-          letter-spacing: 0.02em;
-        }
+        text-align: center;
 
         &.active {
           background-color: var(--color-active-btn);
@@ -143,43 +93,27 @@
 }
 
 .dark-theme {
-  .filters-section-calendar-text {
-    color: var(--text-color-dark-theme);
-  }
   .filters-section-calendar-wrapper-date {
     background-color: var(--background-color-dark);
     border-color: var(--text-color-dark-theme);
-    color: rgba(244, 244, 244, 0.4);
+    color: var(--text-color-dark-theme);
+
     &.active {
       background-color: var(--color-active-btn);
       border-color: var(--color-active-btn);
-      color: var(--color-btn-white);
     }
   }
-  @include desktop {
-    .filters-section-calendar-wrapper {
+  .filters-section-calendar-wrapper {
+    &:after {
+      background: url(../images/calendar-arrow-grey.svg) no-repeat center center;
+      background-size: cover;
+    }
+
+    &.active {
       &:after {
-        background: url(../images/calendar-arrow-grey.svg) no-repeat center
+        background: url(../images/calendar-arrow-grey-up.svg) no-repeat center
           center;
         background-size: cover;
-      }
-
-      &.active {
-        &:after {
-          background: url(../images/calendar-arrow-grey-up.svg) no-repeat center
-            center;
-          background-size: cover;
-        }
-      }
-
-      @include tablet {
-        .filters-section-calendar-wrapper {
-          &:after {
-            background: url(../images/calendar-arrow-down-dark-theme.svg)
-              no-repeat center center;
-            background-size: cover;
-          }
-        }
       }
     }
   }
