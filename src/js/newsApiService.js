@@ -65,7 +65,6 @@ export default class newsApiService {
     if (selectedCategories) {
       SEARCH_BY_CATEGORIES = `&fq=news_desk:(${selectedCategories})`;
     }
-    console.log(selectedDate);
     SEARCH_BY_DATE =
       !selectedDate || selectedDate === null
         ? `?api-key=${API_KEY}`

@@ -157,6 +157,10 @@ function selectedCategories(evt) {
   if (evt.target.nodeName === 'BUTTON') {
     addSelectedCategories(evt.target.textContent);
     evt.target.classList.toggle('btn-categories-selected');
+    console.log(evt.target);
+    const dropdownCategories = document.querySelector('#dropdownDesktopID');
+    console.log(dropdownCategories);
+    dropdownCategories;
     clearMarkupNews();
     createNewsCategory();
   }
