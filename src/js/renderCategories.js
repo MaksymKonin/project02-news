@@ -2,6 +2,57 @@ async function createCategories(arr, anchor) {
   renderCategoriesDesktop(arr, anchor);
   renderCategoriesTablet(arr, anchor);
   renderCategoriesMobile(arr, anchor);
+  const dropdownCategories = {
+    dropdownDesktop: document.querySelector('#dropdownDesktopID'),
+    dropdownTablet: document.querySelector('#dropdownTabletID'),
+    dropdownMobile: document.querySelector('#dropdownMobileID'),
+    dropdownDesktopContainerID: document.querySelector(
+      '#dropdownDesktopContainerID'
+    ),
+    dropdownMobileContainerID: document.querySelector(
+      '#dropdownMobileContainerID'
+    ),
+    dropdownTabletContainerID: document.querySelector(
+      '#dropdownTabletContainerID'
+    ),
+  };
+  dropdownCategories.dropdownDesktop.addEventListener('click', () => {
+    showBlock(dropdownCategories.dropdownDesktopContainerID);
+  });
+  dropdownCategories.dropdownDesktopContainerID.addEventListener(
+    'mouseleave',
+    () => {
+      hideBlock(dropdownCategories.dropdownDesktopContainerID);
+    }
+  );
+  dropdownCategories.dropdownMobile.addEventListener('click', () => {
+    showBlock(dropdownCategories.dropdownMobileContainerID);
+  });
+
+  dropdownCategories.dropdownMobileContainerID.addEventListener(
+    'mouseleave',
+    () => {
+      hideBlock(dropdownCategories.dropdownMobileContainerID);
+    }
+  );
+
+  dropdownCategories.dropdownTablet.addEventListener('click', () => {
+    showBlock(dropdownCategories.dropdownTabletContainerID);
+  });
+
+  dropdownCategories.dropdownTabletContainerID.addEventListener(
+    'mouseleave',
+    () => {
+      hideBlock(dropdownCategories.dropdownTabletContainerID);
+    }
+  );
+}
+
+function hideBlock(htmlObj) {
+  htmlObj.classList.add('is-hidden');
+}
+function showBlock(htmlObj) {
+  htmlObj.classList.remove('is-hidden');
 }
 
 function renderCategoriesDesktop(arr, anchor) {
@@ -17,7 +68,7 @@ function renderCategoriesDesktop(arr, anchor) {
     // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
-  finalString = `<div class="categories-form categories-desktop">${buttonString}<select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Others</option>${listString}</select></div>`;
+  finalString = `<div class="categories-form categories-desktop">${buttonString}<div id="dropdownDesktopID" class="btn-categories js-list-others">Others</div><div id="dropdownDesktopContainerID" class="cat-list-container is-hidden"><div class="categories-scrollable">${listString}</div></div></div>`;
   // console.log(finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
@@ -35,7 +86,7 @@ function renderCategoriesTablet(arr, anchor) {
     // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
-  finalString = `<div class="categories-form categories-tablet">${buttonString}<select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Others</option>${listString}</select></div>`;
+  finalString = `<div class="categories-form categories-tablet">${buttonString}<div id="dropdownTabletID" class="btn-categories js-list-others">Others</div><div id="dropdownTabletContainerID" class="cat-list-container is-hidden"><div class="categories-scrollable">${listString}</div></div></div>`;
   // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
@@ -47,19 +98,18 @@ function renderCategoriesMobile(arr, anchor) {
     // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
-  finalString = `<div
-   class="categories-form categories-mobile"><select name="items" class="btn-categories-others"><option class="filters-section-categories" value="" disabled selected hidden>Categories</option>${listString}</select></div>`;
+  finalString = `<div class="categories-form categories-mobile"><div id="dropdownMobileID" class="btn-categories js-list-others">Categories</div><div id="dropdownMobileContainerID" class="cat-list-container is-hidden"><div class="categories-scrollable">${listString}</div></div></div>`;
   // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
 
 function drawCategoryButton(text) {
   //draw buttons
-  return `<button class="btn-categories" type="button">${text}</button>`;
+  return `<button class="btn-categories js-category-anchor" type="button" value="${text}">${text}</button>`;
 }
 
 function drawCategoryList(text) {
   //draw list
-  return `<option class="filters-section-categories" value="${text}">${text}</option>`;
+  return `<button class="cat-list-item js-category-anchor" value="${text}">${text}</button>`;
 }
 export { createCategories };
