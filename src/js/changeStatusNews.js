@@ -14,22 +14,9 @@ export default function changeStatusNews(normalizedData) {
 }
 
 function saveHaveReadNews(normalizedData) {
-  const haveReadData = localStorageService.load(HAVE_READ);
-  if (haveReadData) {
-    haveReadData.map(haveReadElement => {
-      const haveReadObj = {
-        id: haveReadElement.id,
-        abstract: haveReadElement.abstract,
-        page_url: haveReadElement.page_url,
-        photo_url: haveReadElement.photo_url,
-        published_date: haveReadElement.published_date,
-        section: haveReadElement.section,
-        title: haveReadElement.title,
-        date: haveReadElement.date,
-      };
-      haveReadArray.push(haveReadObj);
-    });
-  }
+  let haveReadData = localStorageService.load(HAVE_READ);
+
+  let newsId = []
 
   const currentDate = new Date().getTime();
 
@@ -38,14 +25,22 @@ function saveHaveReadNews(normalizedData) {
 
   readMoreArray.map(readMoreLink => {
     readMoreLink.addEventListener('click', event => {
+      haveReadData = localStorageService.load(HAVE_READ);
+
+      if (haveReadData) {
+        haveReadData.map(newsObject => {
+          newsId.push(newsObject.id)
+        })
+      }
+        
       const haveReadStatus =
         event.target.parentNode.parentNode.parentNode.firstElementChild;
       haveReadStatus.style.display = 'block';
 
       const parentLi = event.target.parentNode.parentNode.parentNode.parentNode;
       const parentLiId = parentLi.dataset.idNews;
-      const isIncludeId = haveReadArray.includes(parentLiId);
-
+      const isIncludeId = newsId.includes(parentLiId);
+  
       if (!isIncludeId) {
         normalizedData.map(element => {
           if (String(element.id_news) === parentLiId) {
