@@ -128,7 +128,6 @@ async function createNewsCategory() {
   renderNews(paginationPage);
   // renderNews(normalizedData);
   // ------------------------------------------------------
-  setDefaultStatusCategories(selectedCategories);
   changeStatusNews(paginationPage);
 
   // } catch (err) {
@@ -142,7 +141,7 @@ function renderListCategories() {
     createCategories(r, refs.containerCategoriesEl);
   });
   console.log('renderListCategories');
-  let selectedCategories = localStorageService.loadCategoriesFilters();
+  // let selectedCategories = localStorageService.loadCategoriesFilters();
   // setDefaultStatusCategories(selectedCategories);
 }
 //ф-я запиту список категорій
