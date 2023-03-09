@@ -1,7 +1,3 @@
-.use-text-tape {
-  position: relative;
-}
-
 .status-reed {
   display: none;
   position: absolute;
@@ -163,6 +159,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  line-height: 20px;
   overflow: hidden;
   margin-bottom: 20px;
   @media screen and (min-width: 768px) {
