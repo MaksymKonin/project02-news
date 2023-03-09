@@ -13,7 +13,7 @@ import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
 import {
   renderPagination,
-  slicePage,
+  onSlicePage,
   activePageOnPagination,
 } from './js/pagination';
 import LocalStorageService from './js/localStorage';
@@ -56,7 +56,9 @@ function onPaginationClick(evt) {
   clearMarkupNews();
   const pageNum = evt.target.innerHTML;
   activePageOnPagination(pageNum);
-  slicePage(pageNum, queryStorage);
+  let paginationPage = onSlicePage(pageNum,queryStorage);
+  renderNews(paginationPage);
+  changeStatusNews(paginationPage);
 }
 
 //ф-я запиту новин по назві
@@ -69,10 +71,12 @@ async function searchNews() {
       return;
     }
     let normalizedData = normalaizData(response.response.docs);
+    // -------------------------------------------------
     queryStorage = [...normalizedData];
     let paginationPage = renderPagination(queryStorage);
     renderNews(paginationPage);
     changeStatusNews(paginationPage);
+    // ------------------------------------------------
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -87,6 +91,7 @@ async function createpopularNews() {
       return;
     }
     let normalizedData = normalaizData(response.results);
+    //console.log('Маємо queryStorage з запиту createpopularNews')
     queryStorage = [...normalizedData];
     let paginationPage = renderPagination(queryStorage);
     renderNews(paginationPage);
@@ -110,10 +115,12 @@ async function createNewsCategory() {
       return;
     }
     let normalizedData = normalaizData(response.response.docs);
+  // console.log('Маємо queryStorage з запиту createNewsCategory')
     queryStorage = [...normalizedData];
     let paginationPage = renderPagination(queryStorage);
     renderNews(paginationPage);
     changeStatusNews(paginationPage);
+  
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -126,7 +133,7 @@ function renderListCategories() {
     let selectedCategories = localStorageService.loadCategoriesFilters();
     setDefaultStatusCategories(selectedCategories);
   });
-  console.log('renderListCategories');
+  // console.log('renderListCategories');
 }
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -150,14 +157,14 @@ function selectedCategories(evt) {
         document.querySelectorAll('.js-list-others');
       console.log(dropdownCategoriesArray);
 
-      console.log(btnItem?.length);
-      console.log(btnItem?.length > 3);
+      // console.log(btnItem?.length);
+      // console.log(btnItem?.length > 3);
       dropdownCategoriesArray.forEach(dropdownCategories => {
         if (btnItem?.length > 3) {
-          console.log('add');
+          // console.log('add');
           dropdownCategories.classList.add('btn-categories-selected');
         } else {
-          console.log('remove');
+          // console.log('remove');
           dropdownCategories.classList.remove('btn-categories-selected');
         }
       });
@@ -176,7 +183,7 @@ function selectedCategories(evt) {
 
 function setDefaultStatusCategories(selectedCategories) {
   if (selectedCategories === '""') {
-    console.log('stop');
+    // console.log('stop');
     return;
   }
 
@@ -188,12 +195,12 @@ function setDefaultStatusCategories(selectedCategories) {
   });
 
   const dropdownCategoriesArray = document.querySelectorAll('.js-list-others');
-  console.log(dropdownCategoriesArray);
+  // console.log(dropdownCategoriesArray);
   const btnItem = document.querySelectorAll(
     '.categories-scrollable .btn-categories-selected'
   );
-  console.log(btnItem?.length);
-  console.log(btnItem?.length > 3);
+  // console.log(btnItem?.length);
+  // console.log(btnItem?.length > 3);
   dropdownCategoriesArray.forEach(dropdownCategories => {
     if (btnItem?.length > 3) {
       console.log('add');

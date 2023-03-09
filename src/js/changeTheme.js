@@ -14,9 +14,10 @@ const toggle = document.querySelector('.theme__track');
 
 function goDark(event) {
   if (event.target.checked) {
+    console.log(refs.darkTheme);
     refs.bodyEl.classList.remove('ligth-theme');
     refs.bodyEl.classList.add('dark-theme');
-    refs.darkTheme.classList.add('goDark');
+    // refs.darkTheme.classList.add('goDark');
     refs.lightTheme.classList.remove('goLight');
     toggle.classList.add('toggleDark');
     toggle.classList.remove('toggleLight');
@@ -24,7 +25,7 @@ function goDark(event) {
   } else {
     refs.bodyEl.classList.remove('dark-theme');
     refs.bodyEl.classList.add('ligth-theme');
-    refs.darkTheme.classList.remove('goDark');
+    // refs.darkTheme.classList.remove('goDark');
     refs.lightTheme.classList.add('goLight');
     toggle.classList.add('toggleLight');
     toggle.classList.remove('toggleDark');
