@@ -1,12 +1,18 @@
 const mobileMenu = document.querySelector('.js-menu-container');
+const bodyAnchor = document.querySelector('body');
+const mobileRedirectAnchor = document.querySelector('.mobile__menu-list');
 const openMenuBtn = document.querySelector('.js-open-menu');
 const closeMenuBtn = document.querySelector('.js-close-menu');
-
+mobileRedirectAnchor.addEventListener('click', r => {
+  bodyAnchor.classList.remove('scroll-disable-state');
+});
 openMenuBtn.addEventListener('click', r => {
   mobileMenu.classList.remove('is-hidden');
+  bodyAnchor.classList.add('scroll-disable-state');
 });
 closeMenuBtn.addEventListener('click', r => {
   mobileMenu.classList.add('is-hidden');
+  bodyAnchor.classList.remove('scroll-disable-state');
 });
 
 // const toggleMenu = () => {
