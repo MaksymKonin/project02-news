@@ -1,0 +1,128 @@
+.menu-container {
+  //   padding: 16px 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  position: absolute;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--background-color-light);
+
+  z-index: 4;
+  overflow: hidden;
+
+  @include mobile {
+    display: flex;
+  }
+
+  @include tablet {
+    display: none;
+  }
+
+  @include desktop {
+    display: none;
+  }
+}
+.menu-top {
+  display: flex;
+  align-items: flex-start;
+  height: 125px;
+
+  & p {
+    color: var(--text-color);
+    font-family: 'Manrope';
+
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+  }
+
+  & .menu-top-container {
+    padding-left: 16px;
+    padding-right: 16px;
+    height: 33px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.mobile__menu {
+  align-self: stretch;
+  margin-bottom: auto;
+}
+.menu-bottom {
+  padding-left: 16px;
+  height: 40px;
+  //   background-color: yellow;
+}
+.mobile__menu-list {
+  display: flex;
+  flex-direction: column;
+}
+.mobile__menu-item {
+  padding-left: 16px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  height: 44px;
+  margin-bottom: 18px;
+  &:hover {
+    background-color: var(--color-active-btn);
+  }
+  &:hover .mobile__menu-icon-container {
+    border: 1px solid var(--background-color-light);
+  }
+  &:hover a {
+    color: var(--background-color-light);
+  }
+  &:hover p::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 7px;
+    height: 12px;
+    right: 25px;
+    top: 16px;
+    stroke: 'var(--background-color-light)';
+    fill: 'var(--background-color-light)';
+
+    background-image: url(../images/icon-arrow-right-white.svg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+  }
+}
+.mobile__menu-icon-container {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  background-color: var(--color-active-btn);
+  color: var(--color-btn-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mobile__menu-link {
+  margin-left: 14px;
+  margin-right: auto;
+  font-family: 'Manrope';
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.menu__close-tbn {
+  border: none;
+  background-color: var(--background-color-light);
+  cursor: pointer;
+
+  width: 24px;
+  height: 24px;
+  color: var(--text-color);
+}
