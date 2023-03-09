@@ -6,8 +6,8 @@ export const refs = {
   containerPaginationEl: document.querySelector('.js-pagination'),
   checkBoxEl: document.querySelector('.theme-switch__toggle'),
   bodyEl: document.querySelector('body'),
-  dateTimePicker: document.querySelector("#datetime-picker"),
-  calendarWrapper: document.querySelector(".filters-section-calendar-wrapper"),
+  dateTimePicker: document.querySelector('#datetime-picker'),
+  calendarWrapper: document.querySelector('.filters-section-calendar-wrapper'),
   lightTheme: document.querySelector('.light-theme'),
-  darkTheme: document.querySelector('.darh-theme')
+  darkTheme: document.querySelector('.dark-theme'),
 };
