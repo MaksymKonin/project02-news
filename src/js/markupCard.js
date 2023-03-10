@@ -20,7 +20,7 @@ export default function markupCard(card) {
       <div class="card-img-wrapper">
       <img class="card-img" src="${photo_url}" alt="photo news" />
       </div>
-      <a href="${page_url}"><h2 class="page-url">${title}</h2></a>
+      <a href="${page_url}" target="_blank"><h2 class="page-url">${title}</h2></a>
       <p class="abstract-text">${abstract}</p>
       <div>
         <span class="published-date">${published_date}</span>
