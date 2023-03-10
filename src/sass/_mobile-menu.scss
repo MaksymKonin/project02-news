@@ -35,6 +35,12 @@
     display: none;
   }
 }
+
+.dark-theme {
+  & .menu-container {
+    background-color: var(--background-color-dark);
+  }
+}
 .menu-top {
   display: flex;
   align-items: flex-start;
@@ -57,6 +63,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+}
+
+.dark-theme {
+  & .menu-top p {
+    color: var(--text-color-dark-theme);
   }
 }
 
@@ -106,6 +118,13 @@
     background-position: center;
   }
 }
+
+.dark-theme {
+  & .mobile__menu-item p {
+    color: var(--text-color-dark-theme);
+  }
+}
+
 .mobile__menu-icon-container {
   height: 32px;
   width: 32px;
@@ -134,4 +153,190 @@
   width: 24px;
   height: 24px;
   color: var(--text-color);
+}
+.dark-theme {
+  & .menu__close-tbn {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark-theme);
+  }
+}
+
+//------switch--dirty----code---!!!!!!!!!!!!--
+
+body.light-theme--mob-menu {
+  background-color: var(--text-color-dark-theme);
+
+  --light-bg: #f4f4f4;
+  --label-light: #4b48db;
+  --label-dark: #5f6775;
+  --icon-sun: #4b48db;
+  --icon-moon: #5f6775;
+}
+
+body.dark-theme--mob-menu {
+  background: var(--background-color-dark);
+
+  --black--bg: #2e2e2e;
+  --label-light: #f4f4f4;
+  --label-dark: #4440f7;
+  --icon-sun: #5f6775;
+  --icon-moon: #4b48db;
+}
+
+.theme--mob-menu {
+  // top: 49px;
+  gap: 8px;
+  align-items: center;
+  right: 0px;
+  display: none;
+
+  @include mobile {
+    display: flex;
+  }
+}
+
+.theme__track--mob-menu {
+  display: inline-block;
+  position: relative;
+
+  height: 20px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme__marker--mob-menu {
+  position: absolute;
+  display: flex;
+  align-items: center;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: var(--color-btn-white);
+  border: 0.6 solid var(--markercolor);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.theme__marker--mob-menu::before {
+  content: ' ';
+  position: absolute;
+  cursor: pointer;
+
+  border-radius: 50%;
+  background-color: var(--markercolor);
+
+  height: 16px;
+  width: 16px;
+  left: 1px;
+}
+
+.theme-switch__toggle--mob-menu ~ .theme__marker--mob-menu,
+.theme-switch__toggle--mob-menu ~ .theme__marker--mob-menu {
+  border: 1px solid var(--markercolor);
+}
+
+.theme-switch__toggle--mob-menu:focus ~ .theme__marker--mob-menu,
+.theme-switch__toggle--mob-menu:hover ~ .theme__marker--mob-menu {
+  box-shadow: 1px 2px 9px var(--markercolor);
+}
+
+.theme-switch__toggle--mob-menu:checked ~ .theme__marker--mob-menu,
+.theme-switch__toggle--mob-menu:checked ~ .theme__marker--mob-menu {
+  box-shadow: 1px 2px 9px var(--text-color-dark-theme);
+}
+
+.theme-switch__toggle--mob-menu:checked ~ .theme__marker--mob-menu {
+  background-color: var(--color-active-btn);
+  border: 1px solid var(--color-btn-white);
+
+  border-radius: 20px;
+
+  &::before {
+    background-color: var(--color-btn-white);
+  }
+}
+
+.theme-switch__toggle--mob-menu:checked ~ .theme__marker--mob-menu::before {
+  transform: translateX(20px);
+}
+
+.theme-change--mob-menu {
+  display: flex;
+
+  font-family: var(--secondary-font);
+  font-size: 18px;
+  font-weight: 400;
+
+  line-height: 1.33;
+}
+
+.theme-change--mob-menu {
+  &-mobile {
+    display: flex;
+
+    &.light--mob-menu {
+      stroke: var(--icon-sun);
+      stroke-width: 1.5px;
+      fill: var(--light-bg);
+      border-radius: 50%;
+
+      @include mobile {
+        display: none;
+      }
+    }
+
+    &.dark--mob-menu {
+      stroke: var(--icon-moon);
+      stroke-width: 1.5px;
+      fill: var(--black--bg);
+
+      @include mobile {
+        display: none;
+      }
+    }
+  }
+
+  &.light--mob-menu {
+    color: var(--label-light);
+    display: none;
+
+    @include desktop {
+      display: inline-block;
+    }
+  }
+
+  &.dark--mob-menu {
+    color: var(--label-dark);
+    display: none;
+
+    @include desktop {
+      display: inline-block;
+    }
+  }
+}
+
+.icon-switch-sun--mob-menu {
+  stroke: var(--color-active-btn);
+  fill: var(--color-active-btn);
+}
+
+.icon-switch-moon--mob-menu {
+  stroke: #5f6775;
+  fill: var(--background-color-light);
+}
+
+.dark-theme--mob-menu {
+  & .icon-switch-sun--mob-menu {
+    stroke: #5f6775;
+    fill: #5f6775;
+  }
+  & .icon-switch-moon--mob-menu {
+    stroke: var(--color-active-btn);
+    fill: var(--background-color-dark);
+  }
 }
