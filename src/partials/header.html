@@ -1,5 +1,75 @@
 <header class="header">
     <div class="container container--header">
+
+        <div class="header__logo-con">
+            <a href="./index.html" id="link4" class="logo-site">
+                <span class="logo__name">News</span>
+            </a>
+        </div>
+        <nav class="header__navigation-con">
+            <a class="navigation-list__link navigation-list__link--current" id="home" href="./index.html">Home</a>
+            <a class="navigation-list__link navigation-list-middle" id="favorite" href="./favorite.html">Favorite</a>
+            <a class="navigation-list__link" id="read" href="./read.html">Read</a>
+
+        </nav>
+    
+        <div class="header__search-con">
+            <form class="header-search-form js-form-search">
+                <button type="submit" class="search-btn">
+                    <svg class="search-icon-btn" width="20" height="20">
+                    <use href="/src/images/icons.svg#icon-bx_search"></use>
+                    </svg>
+                </button>
+                <input class="search__form--input" 
+                type="text" 
+                name="searchQuery" 
+                autocomplete="off"
+                placeholder="Search" 
+                >
+            </form> 
+        </div>
+        <div class="header__mobile-con"><button
+            class="mobile-btn js-open-menu"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <svg class="mobile-btn__icon" width="24" height="24">
+              <use href="/src/images/icons.svg#icon-menu"></use>
+            </svg>
+          </button>
+        </div>
+        <div class="header__theme-switcher-con">
+            <div class="theme">
+                <div class="light theme-change light-theme">Light</div>
+                <div class="light theme-change-mobile light-theme-mobile">
+                    <svg class="icon-switch-sun" width="21" height="21">
+                        <use href="/src/images/icons.svg#icon-sun"></use>
+                    </svg>
+                </div>
+                    <div class="theme-switch__wrap">
+                        <label aria-hidden="true" class="theme__track" for="theme-switch-toggle">
+                            <input class="theme-switch__toggle main-theme-switch__toggle" type="checkbox" name="theme" 
+                            id="theme-switch-toggle" aria-label="switch theme" />
+                                <span aria-hidden="true" class="theme__marker"></span>
+                        </label>
+                </div>
+                <div class="dark theme-change dark-theme">Dark</div>
+                <div class="dark theme-change-mobile dark-theme-mobile">
+                    <svg class="icon-switch-moon" width="21" height="21">
+                        <use href="/src/images/icons.svg#icon-moon"></use>
+                    </svg>
+                    
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <!-- <div class="container container--header">
             <div class="header-nav-wrapper">
         
                 <nav class="header-navigation">
@@ -23,10 +93,10 @@
                         </li>
                         </ul>
                 </nav>
-            </div> 
+            </div>  -->
     
             <!-- Search form  -->
-        <div class="search-form_wrapper">
+        <!-- <div class="search-form_wrapper">
             <form class="header-search-form js-form-search">
                     <input class="search__form--input" 
                     type="text" 
@@ -50,11 +120,11 @@
                     </svg>
                   </button>
             </form> 
-    </div>  
+    </div>   -->
     
     
         <!-- Theme switch -->
-        <div class="toolbar">
+        <!-- <div class="toolbar">
             <div class="theme">
                 <p class="light theme-change light-theme">Light</p>
                 <p class="light theme-change-mobile light-theme-mobile">
@@ -77,7 +147,7 @@
                 </p>
             </div>
         
-        </div>
+        </div> -->
     
     </header> 
     
