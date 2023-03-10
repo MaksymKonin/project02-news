@@ -14,7 +14,6 @@ const toggle = document.querySelector('.theme__track');
 
 function goDark(event) {
   if (event.target.checked) {
-    console.log(refs.darkTheme);
     refs.bodyEl.classList.remove('ligth-theme');
     refs.bodyEl.classList.add('dark-theme');
     // refs.darkTheme.classList.add('goDark');

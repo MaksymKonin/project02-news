@@ -21,6 +21,7 @@
     "axios": "^1.3.4",
     "caniuse-lite": "^1.0.30001460",
     "flatpickr": "^4.6.13",
+    "lodash.throttle": "^4.1.1",
     "modern-normalize": "^1.1.0",
     "notiflix": "^3.2.6"
   },

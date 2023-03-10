@@ -2,7 +2,9 @@ import markupCard from './markupCard';
 import { refs } from './refs';
 //ф-я рендер всих карток новин
 function renderNews(paginationPage) {
-  console.log("рендер сторінки с paginationPage" )
+  if (!paginationPage || paginationPage?.length === 0) {
+    return;
+  }
   let cards = paginationPage
     .map(Data => {
       return markupCard(Data);

@@ -9,36 +9,29 @@ const API_KEY = 'H4EzmbJjzcMKAQjlOxUvVd6TipG3GhzM';
 export default class newsApiService {
   constructor() {
     this.searchQuery = '';
-    this.SEARCH_BY_DATE_URL = this.page = 0;
-    this.loadCards = 0;
+    this.page = 0;
+    this.pageNum = 1;
+    this.requestNum = 1;
   }
 
-  getsearchNews() {
+  resetData() {
+    this.page = 0;
+    this.pageNum = 1;
+    this.requestNum = 1;
+  }
+
+  getSearchNews() {
     return fetch(
       `${SEARCH_NEWS_URL}?q=${this.searchQuery}&page=${this.page}&api-key=${API_KEY}`
     ).then(responce => {
       if (!responce.ok) {
         throw new Error(responce.statusText);
       }
-      this.nextPage();
       return responce.json();
     });
   }
 
-  nextPage() {
-    this.page += 1;
-  }
-
-  resetData() {
-    this.page = 0;
-    this.loadCards = 0;
-  }
-
-  addLoadCards(quantityLoadCards) {
-    this.loadCards = this.loadCards + quantityLoadCards;
-  }
-
-  getpopularNews() {
+  getPopularNews() {
     return fetch(
       `${POPULAR_NEWS_URL}/${POPULAR_NEWS_DAYS}.json?api-key=${API_KEY}`
     ).then(responce => {
@@ -61,13 +54,12 @@ export default class newsApiService {
   getDateAndCategoryNews(selectedDate, selectedCategories) {
     let SEARCH_BY_DATE = '';
     let SEARCH_BY_CATEGORIES = '';
-
     if (selectedCategories) {
       SEARCH_BY_CATEGORIES = `&fq=news_desk:(${selectedCategories})`;
     }
     SEARCH_BY_DATE =
       !selectedDate || selectedDate === null
-        ? `?api-key=${API_KEY}`
+        ? `?api-key=${API_KEY}&page=${this.page}`
         : `?facet_field=day_of_week&facet=true&begin_date=${selectedDate}&end_date=${selectedDate}&api-key=${API_KEY}`;
 
     return fetch(

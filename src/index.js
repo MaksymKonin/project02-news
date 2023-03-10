@@ -1,9 +1,9 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import throttle from 'lodash.throttle';
 import changeTheme from './js/changeTheme';
 import { userPositionConsent, weatherMarkup } from './js/weatherServiceMain';
 import { createCalendar } from './js/renderCalendar';
 import NewsApiService from './js/newsApiService';
-import normalaizData from './js/normalaizData';
 import {
   renderNews,
   createCardNotFound,
@@ -12,15 +12,15 @@ import {
 import { createCategories } from './js/renderCategories';
 import { refs } from './js/refs';
 import {
-  renderPagination,
-  onSlicePage,
-  activePageOnPagination,
-} from './js/pagination';
+  getDataForMarkupNews,
+  getDataForMarkupPopularNews,
+} from './js/getDataForMarkupNews';
 import LocalStorageService from './js/localStorage';
 const localStorageService = new LocalStorageService();
 const newsApiService = new NewsApiService();
 import changeStatusNews from './js/changeStatusNews';
-let queryStorage = null;
+let nameRequest = '';
+
 changeTheme();
 createCalendar();
 renderListCategories();
@@ -28,17 +28,22 @@ weatherMarkup();
 userPositionConsent(); //run weather according to location
 if (localStorageService.loadFilters()) {
   createNewsCategory();
-} else createpopularNews();
+} else createPopularNews();
 
-refs.formEl.addEventListener('submit', onFormSubmit);
-refs.containerCategoriesEl.addEventListener('click', onCategoriesClick);
-// refs.containerCategoriesEl.addEventListener('change', onCategoriesClick);
-refs.containerPaginationEl.addEventListener('click', onPaginationClick);
+refs.formEl.addEventListener('submit', throttle(onFormSubmit, 300));
+refs.containerCategoriesEl.addEventListener(
+  'click',
+  throttle(onCategoriesClick, 300)
+);
+refs.containerPaginationEl.addEventListener(
+  'click',
+  throttle(onPaginationClick, 300)
+);
 
 //ф-я обробка кліку по кнопці форми
 function onFormSubmit(evt) {
   evt.preventDefault();
-  newsApiService.resetData();
+  clearData();
   clearMarkupNews();
   newsApiService.searchQuery =
     evt.currentTarget.elements.searchQuery.value.trim();
@@ -47,62 +52,66 @@ function onFormSubmit(evt) {
 //ф-я обробка кліку по категоріям
 function onCategoriesClick(evt) {
   evt.preventDefault();
-  newsApiService.resetData();
+  clearData();
   selectedCategories(evt);
 }
 //ф-я обробка кліку по пагінації/вибір номера сторінки
 function onPaginationClick(evt) {
   evt.preventDefault();
   clearMarkupNews();
-  const pageNum = evt.target.innerHTML;
-  activePageOnPagination(pageNum);
-  let paginationPage = onSlicePage(pageNum,queryStorage);
-  renderNews(paginationPage);
-  changeStatusNews(paginationPage);
+  newsApiService.requestNum += 1;
+  newsApiService.pageNum = Number(evt.target.innerHTML);
+  selectionOptionGetNews();
 }
 
 //ф-я запиту новин по назві
-async function searchNews() {
-  clearMarkupNews();
-  const response = await newsApiService.getsearchNews();
+async function searchNews(statusPagination) {
+  if (statusPagination !== true) {
+    clearMarkupNews();
+    clearData();
+  }
+
+  const response = await newsApiService.getSearchNews();
   try {
     if (response.response.docs.length === 0) {
       createCardNotFound();
       return;
     }
-    let normalizedData = normalaizData(response.response.docs);
-    // -------------------------------------------------
-    queryStorage = [...normalizedData];
-    let paginationPage = renderPagination(queryStorage);
-    renderNews(paginationPage);
-    changeStatusNews(paginationPage);
-    // ------------------------------------------------
+    nameRequest = 'searchNews';
+    let data = getDataForMarkupNews(response, newsApiService.pageNum);
+    renderNews(data);
+    changeStatusNews(data);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
 }
 //ф-я створення популярних новин
-async function createpopularNews() {
-  clearMarkupNews();
-  const response = await newsApiService.getpopularNews();
+async function createPopularNews(statusPagination) {
+  if (statusPagination !== true) {
+    clearMarkupNews();
+    clearData();
+  }
+  const response = await newsApiService.getPopularNews();
   try {
     if (response.results.length === 0) {
       createCardNotFound();
       return;
     }
-    let normalizedData = normalaizData(response.results);
-    //console.log('Маємо queryStorage з запиту createpopularNews')
-    queryStorage = [...normalizedData];
-    let paginationPage = renderPagination(queryStorage);
-    renderNews(paginationPage);
-    changeStatusNews(paginationPage);
+    nameRequest = 'popularNews';
+    let data = getDataForMarkupNews(response, newsApiService.pageNum);
+    renderNews(data);
+    changeStatusNews(data);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
 }
 
 //ф-я запиту новин по категорії
-async function createNewsCategory() {
+async function createNewsCategory(statusPagination) {
+  if (statusPagination !== true) {
+    clearMarkupNews();
+    clearData();
+  }
   let selectedDate = localStorageService.loadDataFilters();
   let selectedCategories = localStorageService.loadCategoriesFilters();
   const response = await newsApiService.getDateAndCategoryNews(
@@ -114,13 +123,10 @@ async function createNewsCategory() {
       createCardNotFound();
       return;
     }
-    let normalizedData = normalaizData(response.response.docs);
-  // console.log('Маємо queryStorage з запиту createNewsCategory')
-    queryStorage = [...normalizedData];
-    let paginationPage = renderPagination(queryStorage);
-    renderNews(paginationPage);
-    changeStatusNews(paginationPage);
-  
+    nameRequest = 'NewsCategory';
+    let data = getDataForMarkupNews(response, newsApiService.pageNum);
+    renderNews(data);
+    changeStatusNews(data);
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
@@ -133,7 +139,6 @@ function renderListCategories() {
     let selectedCategories = localStorageService.loadCategoriesFilters();
     setDefaultStatusCategories(selectedCategories);
   });
-  // console.log('renderListCategories');
 }
 //ф-я запиту список категорій
 async function createListCategories() {
@@ -155,26 +160,13 @@ function selectedCategories(evt) {
       );
       const dropdownCategoriesArray =
         document.querySelectorAll('.js-list-others');
-      console.log(dropdownCategoriesArray);
-
-      // console.log(btnItem?.length);
-      // console.log(btnItem?.length > 3);
       dropdownCategoriesArray.forEach(dropdownCategories => {
         if (btnItem?.length > 3) {
-          // console.log('add');
           dropdownCategories.classList.add('btn-categories-selected');
         } else {
-          // console.log('remove');
           dropdownCategories.classList.remove('btn-categories-selected');
         }
       });
-      //   const dropdownCategories =
-      //     evt.target.parentNode.parentNode.previousSibling;
-
-      //   if (dropdownCategories.classList.contains('btn-categories-selected')) {
-      //     if (btnItem?.length === 0)
-      //       dropdownCategories.classList.remove('btn-categories-selected');
-      //   } else dropdownCategories.classList.add('btn-categories-selected');
     }
   }
   clearMarkupNews();
@@ -183,7 +175,6 @@ function selectedCategories(evt) {
 
 function setDefaultStatusCategories(selectedCategories) {
   if (selectedCategories === '""') {
-    // console.log('stop');
     return;
   }
 
@@ -195,18 +186,13 @@ function setDefaultStatusCategories(selectedCategories) {
   });
 
   const dropdownCategoriesArray = document.querySelectorAll('.js-list-others');
-  // console.log(dropdownCategoriesArray);
   const btnItem = document.querySelectorAll(
     '.categories-scrollable .btn-categories-selected'
   );
-  // console.log(btnItem?.length);
-  // console.log(btnItem?.length > 3);
   dropdownCategoriesArray.forEach(dropdownCategories => {
     if (btnItem?.length > 3) {
-      console.log('add');
       dropdownCategories.classList.add('btn-categories-selected');
     } else {
-      console.log('remove');
       dropdownCategories.classList.remove('btn-categories-selected');
     }
   });
@@ -226,5 +212,73 @@ function addSelectedCategories(category) {
       1
     );
     localStorageService.saveCategoriesFilters(arraySelectedCategories);
+  }
+}
+
+function getRemainderDataLocalStorage() {
+  if (newsApiService.requestNum % 5 === 0) {
+    let response = localStorageService.load(
+      localStorageService.PAGINATION_NEWS
+    );
+    localStorage.removeItem(localStorageService.PAGINATION_NEWS);
+    let data = getDataForMarkupNews(response, newsApiService.pageNum, 'ls');
+    return data;
+  }
+  return false;
+}
+
+function getNewsLocalStorage() {
+  let pageNumDataNews = localStorageService.load(
+    localStorageService.PAGE_DATA_NEWS
+  );
+  if (pageNumDataNews) {
+    const keys = Object.keys(pageNumDataNews);
+    for (const key of keys) {
+      if (Number(key) === newsApiService.pageNum) {
+        let data = getDataForMarkupNews(
+          pageNumDataNews[key],
+          newsApiService.pageNum,
+          'ls'
+        );
+        newsApiService.requestNum -= 1;
+        return data;
+      }
+    }
+  }
+  return false;
+}
+
+function clearData() {
+  newsApiService.resetData;
+  localStorage.removeItem(localStorageService.PAGINATION_NEWS);
+  localStorage.removeItem(localStorageService.PAGE_DATA_NEWS);
+}
+
+function selectionOptionGetNews() {
+  let data = getNewsLocalStorage();
+  if (data !== false) {
+    renderNews(data);
+    changeStatusNews(data);
+    return;
+  }
+  data = getRemainderDataLocalStorage();
+  if (data !== false) {
+    renderNews(data);
+    changeStatusNews(data);
+    return;
+  }
+  newsApiService.page += 1;
+  if (nameRequest === 'searchNews') {
+    searchNews(true);
+  } else if (nameRequest === 'NewsCategory') {
+    createNewsCategory(true);
+  } else {
+    let response = localStorageService.load(
+      localStorageService.PAGINATION_NEWS
+    );
+    localStorage.removeItem(localStorageService.PAGINATION_NEWS);
+    let data = getDataForMarkupPopularNews(response, newsApiService.pageNum);
+    renderNews(data);
+    changeStatusNews(data);
   }
 }

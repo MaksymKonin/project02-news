@@ -61,15 +61,12 @@ function renderCategoriesDesktop(arr, anchor) {
   let listString = '';
   let finalString = '';
   for (let i = 0; i < buttonQuantity && i < arr.length; i += 1) {
-    // console.log('button->', arr[i]);
     buttonString += drawCategoryButton(arr[i]);
   }
   for (let i = buttonQuantity; i <= arr.length; i += 1) {
-    // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
   finalString = `<div class="categories-form categories-desktop">${buttonString}<div id="dropdownDesktopID" class="btn-categories js-list-others">Others</div><div id="dropdownDesktopContainerID" class="cat-list-container is-hidden"><div class="categories-scrollable">${listString}</div></div></div>`;
-  // console.log(finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
 
@@ -79,15 +76,12 @@ function renderCategoriesTablet(arr, anchor) {
   let listString = '';
   let finalString = '';
   for (let i = 0; i < buttonQuantity && i < arr.length; i += 1) {
-    // console.log('button->', arr[i]);
     buttonString += drawCategoryButton(arr[i]);
   }
   for (let i = buttonQuantity; i <= arr.length; i += 1) {
-    // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
   finalString = `<div class="categories-form categories-tablet">${buttonString}<div id="dropdownTabletID" class="btn-categories js-list-others">Others</div><div id="dropdownTabletContainerID" class="cat-list-container is-hidden"><div class="categories-scrollable">${listString}</div></div></div>`;
-  // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
 
@@ -95,21 +89,17 @@ function renderCategoriesMobile(arr, anchor) {
   let listString = '';
   let finalString = '';
   for (let i = 0; i <= arr.length; i += 1) {
-    // console.log('item->', arr[i]);
     listString += drawCategoryList(arr[i]);
   }
   finalString = `<div class="categories-form categories-mobile"><div id="dropdownMobileID" class="btn-categories js-list-others">Categories</div><div id="dropdownMobileContainerID" class="cat-list-container is-hidden"><div class="categories-scrollable">${listString}</div></div></div>`;
-  // console.log('tablet string:', finalString);
   anchor.insertAdjacentHTML('afterbegin', finalString);
 }
 
 function drawCategoryButton(text) {
-  //draw buttons
   return `<button class="btn-categories js-category-anchor" type="button" value="${text}">${text}</button>`;
 }
 
 function drawCategoryList(text) {
-  //draw list
   return `<button class="cat-list-item js-category-anchor" value="${text}">${text}</button>`;
 }
 export { createCategories };

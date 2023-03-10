@@ -1,4 +1,4 @@
-//import weather module:
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import {
   createDateString,
   createForecastDateString,
@@ -21,12 +21,9 @@ let weeklyWeatherBlock = null;
 let todayWeatherBlock = null;
 let weatherForWeekListener = null;
 let weatherForTodayListener = null;
-// console.log(weatherButtonInsertionPoint);
 let actualLocation = { lat: 39.8865, lon: -83.4483 };
 const currentTimestamp = new Date();
 let weatherTimestamp = currentTimestamp.getTime();
-
-//+++Imported from render++++++++++++++++++++++++++++++
 
 function secondsToString(seconds) {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -89,7 +86,7 @@ async function insertWeatherBlock(
     .then(value => {
       return value;
     })
-    .catch(error => console.log('странный лог', error));
+    .catch(error => Notify.failure('Free request limit')());
 
   a.then(result => {
     const [query1, query2, query3] = result;
@@ -123,19 +120,11 @@ async function insertWeatherBlock(
 }
 
 export { insertWeatherBlock };
-
-//+++END+++++
-
-//weather user consent (popup location prompt)
 async function userPositionConsent() {
   return navigator.geolocation.getCurrentPosition(r => {
-    // console.log(r);
     actualLocation.lat = r.coords.latitude;
     actualLocation.lon = r.coords.longitude;
     weatherTimestamp = r.timestamp;
-
-    // weatherButtonInsertionPoint = document.querySelector('.weather-button');
-    // weatherButtonEventListener
 
     insertWeatherBlock(
       wetherButtonState,
@@ -145,34 +134,6 @@ async function userPositionConsent() {
     );
   });
 }
-
-//   !!!!!  insert weather markup:
-// run } weatherMarkup { as callback in your markUp
-
-//button state 'true' - one day weather, 'false' - week.
-//insertion point - HTML node.
-// This script add markup to this node: const insertionPoint = document.querySelector('___some_selector___');
-//run insertWeatherBlock(true, weatherInsertionPoint); in the begining
-//run insertWeatherBlock(true, weatherInsertionPoint); as click on button
-
-//weather test buttons and functions
-
-// const buttonTest = document.querySelector('#test');
-// console.log(buttonTest);
-// buttonTest.addEventListener('click', callBack);
-
-// const buttonTestWeatherReq = document.querySelector('#sendWeatherReq');
-// console.log(buttonTestWeatherReq);
-// buttonTestWeatherReq.addEventListener('click', weatherMarkup);
-
-// function callBack() {
-//   console.log(
-//     'current coordinates:',
-//     actualLocation,
-//     'and time:',
-//     weatherTimestamp
-//   );
-// }
 function weatherMarkup() {
   insertWeatherBlock(
     wetherButtonState,
