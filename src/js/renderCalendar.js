@@ -48,7 +48,6 @@ function calendarApiService(date) {
     addZero(date.getFullYear()) +
     addZero(date.getMonth() + 1) +
     addZero(date.getDate());
-  console.log(selectedDate);
   if (selectedDate === localStorage.loadDataFilters()) selectedDate = null;
   localStorage.saveDataFilters(selectedDate);
   let selectedCategories = localStorage.loadCategoriesFilters();
@@ -57,7 +56,6 @@ function calendarApiService(date) {
   apiService
     .getDateAndCategoryNews(selectedDate, selectedCategories)
     .then(response => {
-      console.log(response);
       if (response.response.docs.length === 0) {
         createCardNotFound();
         return;

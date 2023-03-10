@@ -4,6 +4,10 @@ export default class localStorageService {
   constructor() {
     this.keySavedFilters = 'Filters';
     this.FAVORITES_NEWS = 'favorite-news';
+    this.PAGINATION_NEWS = 'pagination-news';
+    this.CLICKED_PAGES = 'clickedPages';
+    this.PAGE_DATA_NEWS = 'pageDataNews';
+    this.CALENDAR_PARAMETERS = 'calendarParameters';
   }
   save(key, value) {
     try {
